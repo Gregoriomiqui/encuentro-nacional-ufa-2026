@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://tu-usuario.github.io/projectUFA/sitemap.xml
+
+# Disallow specific paths (if any)
+# Disallow: /assets/
+
+# Crawl-delay (optional)
+Crawl-delay: 10
