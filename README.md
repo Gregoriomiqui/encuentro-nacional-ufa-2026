@@ -6,6 +6,34 @@ Sitio web oficial para el Retiro Nacional de la Unión Femenina Aliancista (UFA)
 
 Este es un sitio web profesional e informativo diseñado para proporcionar información sobre el Retiro Nacional UFA, incluyendo detalles del evento, proceso de inscripción, términos y condiciones, y política de privacidad.
 
+## 🧱 Modernización Frontend (React 19)
+
+Además del sitio estático principal, el repositorio ahora incluye un módulo frontend moderno en `app/` con arquitectura profesional para escalar funcionalidades de negocio.
+
+### Estado de migración (Días 1-5)
+
+1. **Día 1**: Base técnica en Vite + React 19 + TypeScript estricto.
+2. **Día 2**: Scaffolding Feature-First + Clean Architecture.
+3. **Día 3**: Setup TDD (Vitest + RTL) con pre-commit de calidad.
+4. **Día 4**: Vertical slice real implementado con TDD (`registration`).
+5. **Día 5**: Gate de calidad en CI (typecheck, lint, test, coverage, build).
+
+### Rutas clave del módulo moderno
+
+- Documentación del módulo: [app/README.md](app/README.md)
+- Pipeline de calidad: [.github/workflows/app-quality-gate.yml](.github/workflows/app-quality-gate.yml)
+- Versión de Node recomendada: [.nvmrc](.nvmrc)
+
+### Comandos rápidos del módulo `app`
+
+```bash
+pnpm -C app install
+pnpm -C app dev
+pnpm -C app test
+pnpm -C app test:coverage
+pnpm -C app build
+```
+
 ## 🚀 Características
 
 - **Diseño Responsivo**: Adaptable a todos los dispositivos (móviles, tablets, desktop)
