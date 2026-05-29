@@ -1,0 +1,8 @@
+if [ -s "$HOME/.nvm/nvm.sh" ]; then
+	. "$HOME/.nvm/nvm.sh"
+	nvm use --silent >/dev/null 2>&1 || nvm use --silent 24 >/dev/null 2>&1
+fi
+
+node -e "const major = Number(process.versions.node.split('.')[0]); if (major < 20) { console.error('Node 20+ requerido para el hook. Version actual: ' + process.versions.node); process.exit(1); }"
+
+pnpm -C app lint && pnpm -C app test
