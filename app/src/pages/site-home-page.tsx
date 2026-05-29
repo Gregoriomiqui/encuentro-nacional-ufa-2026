@@ -51,18 +51,15 @@ export function SiteHomePage() {
 
       <section id="inscripcion" className="section section-alt">
         <div className="container">
-          <h2 className="section-title">Inscripcion</h2>
+          <h2 className="section-title">Inscripción</h2>
           <div className="inscription-content">
             <p className="inscription-text">
-              El proceso de inscripcion estara disponible proximamente. Por favor, revisa nuestros terminos y condiciones
-              antes de registrarte.
+              La inscripción se realiza en una pagina dedicada con formulario por pasos, comprobante de pago y validación
+              de datos.
             </p>
             <div className="button-group">
-              <Link to="/terminos-y-condiciones" className="button button-secondary">
-                Ver Terminos y Condiciones
-              </Link>
-              <Link to="/politica-de-privacidad" className="button button-secondary">
-                Politica de Privacidad
+              <Link to="/inscripcion" className="button button-primary">
+                Ir al Formulario de Inscripción
               </Link>
             </div>
           </div>

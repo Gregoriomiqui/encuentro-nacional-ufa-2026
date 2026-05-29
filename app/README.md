@@ -32,6 +32,19 @@ pnpm -C app install
 pnpm -C app dev
 ```
 
+## Variables de entorno
+
+Antes de ejecutar la aplicacion, crea un archivo .env en la carpeta app usando app/.env.example como referencia.
+
+Variables usadas por el modulo de inscripción:
+
+1. VITE_MAKE_WEBHOOK_URL
+2. VITE_MAKE_API_KEY
+
+Variable opcional general:
+
+1. VITE_API_BASE_URL
+
 ## Scripts disponibles
 
 ```bash
