@@ -23,6 +23,9 @@ export function SiteFooter() {
                 <Link to="/terminos-y-condiciones">Terminos y Condiciones</Link>
               </li>
               <li>
+                <Link to="/inscripcion">Inscripción</Link>
+              </li>
+              <li>
                 <Link to="/politica-de-privacidad">Politica de Privacidad</Link>
               </li>
             </ul>

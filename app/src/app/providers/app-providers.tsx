@@ -1,4 +1,5 @@
 import { useEffect, type PropsWithChildren } from 'react'
+import { Toaster } from 'react-hot-toast'
 
 export function AppProviders({ children }: PropsWithChildren) {
   useEffect(() => {
@@ -55,5 +56,33 @@ export function AppProviders({ children }: PropsWithChildren) {
     }
   }, [])
 
-  return children
+  return (
+    <>
+      {children}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            borderRadius: '10px',
+            border: '1px solid #e5e7eb',
+            background: '#ffffff',
+            color: '#1f2937',
+          },
+          success: {
+            iconTheme: {
+              primary: '#027a48',
+              secondary: '#ffffff',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#b42318',
+              secondary: '#ffffff',
+            },
+          },
+        }}
+      />
+    </>
+  )
 }

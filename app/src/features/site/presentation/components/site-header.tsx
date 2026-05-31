@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
 type SiteHeaderProps = {
   title: string
@@ -19,19 +19,19 @@ export function SiteHeader({ title }: SiteHeaderProps) {
             </NavLink>
           </li>
           <li>
-            <a href="/#evento" className="nav-link">
+            <Link to="/#evento" className="nav-link">
               El Evento
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/#inscripcion" className="nav-link">
-              Inscripcion
-            </a>
+            <NavLink to="/inscripcion" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>
+              Inscripción
+            </NavLink>
           </li>
           <li>
-            <a href="/#contacto" className="nav-link">
+            <Link to="/#contacto" className="nav-link">
               Contacto
-            </a>
+            </Link>
           </li>
         </ul>
       </nav>

@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 
 import { SiteLayout } from '@features/site/presentation/components/site-layout'
 import { PrivacyPage } from '@pages/privacy-page'
+import { RegistrationPage } from '@pages/registration-page'
 import { SiteHomePage } from '@pages/site-home-page'
 import { TermsPage } from '@pages/terms-page'
 
@@ -13,6 +14,14 @@ export function AppRouter() {
         element={
           <SiteLayout title="Encuentro Nacional UFA 2026">
             <SiteHomePage />
+          </SiteLayout>
+        }
+      />
+      <Route
+        path="/inscripcion"
+        element={
+          <SiteLayout title="UFAACYM Chile">
+            <RegistrationPage />
           </SiteLayout>
         }
       />
