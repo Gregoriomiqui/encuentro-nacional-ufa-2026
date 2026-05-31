@@ -5,4 +5,4 @@ fi
 
 node -e "const major = Number(process.versions.node.split('.')[0]); if (major < 20) { console.error('Node 20+ requerido para el hook. Version actual: ' + process.versions.node); process.exit(1); }"
 
-pnpm -C app lint && pnpm -C app test
+pnpm lint && pnpm test

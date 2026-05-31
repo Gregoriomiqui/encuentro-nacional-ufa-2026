@@ -1,6 +1,7 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 
 import { SiteLayout } from '@features/site/presentation/components/site-layout'
+import { NotFoundPage } from '@pages/not-found-page'
 import { PrivacyPage } from '@pages/privacy-page'
 import { RegistrationPage } from '@pages/registration-page'
 import { SiteHomePage } from '@pages/site-home-page'
@@ -41,7 +42,7 @@ export function AppRouter() {
           </SiteLayout>
         }
       />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )
 }
