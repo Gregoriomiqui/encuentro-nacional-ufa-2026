@@ -8,7 +8,7 @@ Este es un sitio web profesional e informativo diseñado para proporcionar infor
 
 ## 🧱 Modernización Frontend (React 19)
 
-Además del sitio estático principal, el repositorio ahora incluye un módulo frontend moderno en `app/` con arquitectura profesional para escalar funcionalidades de negocio.
+El repositorio incluye un frontend moderno en React 19 + Vite con arquitectura profesional para escalar funcionalidades de negocio.
 
 ### Estado de migración (Días 1-5)
 
@@ -20,18 +20,17 @@ Además del sitio estático principal, el repositorio ahora incluye un módulo f
 
 ### Rutas clave del módulo moderno
 
-- Documentación del módulo: [app/README.md](app/README.md)
 - Pipeline de calidad: [.github/workflows/app-quality-gate.yml](.github/workflows/app-quality-gate.yml)
 - Versión de Node recomendada: [.nvmrc](.nvmrc)
 
-### Comandos rápidos del módulo `app`
+### Comandos rápidos
 
 ```bash
-pnpm -C app install
-pnpm -C app dev
-pnpm -C app test
-pnpm -C app test:coverage
-pnpm -C app build
+pnpm install
+pnpm dev
+pnpm test
+pnpm test:coverage
+pnpm build
 ```
 
 ## 🚀 Características
