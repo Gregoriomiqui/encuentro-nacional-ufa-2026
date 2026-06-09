@@ -7,9 +7,11 @@ export type MakeRegistrationResponse = {
 }
 
 export class RegistrationApiError extends Error {
-  constructor(public readonly statusCode: number, message: string) {
+  readonly statusCode: number
+  constructor(statusCode: number, message: string) {
     super(message)
     this.name = 'RegistrationApiError'
+    this.statusCode = statusCode
   }
 }
 
