@@ -6,6 +6,13 @@ export type MakeRegistrationResponse = {
   message: string
 }
 
+export class RegistrationApiError extends Error {
+  constructor(public readonly statusCode: number, message: string) {
+    super(message)
+    this.name = 'RegistrationApiError'
+  }
+}
+
 export async function sendRegistration(payload: RegistrationPayload): Promise<MakeRegistrationResponse> {
   if (!env.makeWebhookUrl || !env.makeWebhookApiKey) {
     throw new Error('Faltan variables de entorno para enviar la inscripción (VITE_MAKE_WEBHOOK_URL y VITE_MAKE_API_KEY).')
@@ -21,7 +28,16 @@ export async function sendRegistration(payload: RegistrationPayload): Promise<Ma
   })
 
   if (!response.ok) {
-    throw new Error('No se pudo enviar la inscripción. Intenta nuevamente.')
+    if (response.status === 400) {
+      throw new RegistrationApiError(400, 'Inscripción fallida')
+    }
+    if (response.status === 409) {
+      throw new RegistrationApiError(409, 'Falla en comprobante de pago, ponerse en contacto con equipo de UFA Nacional')
+    }
+    if (response.status === 500) {
+      throw new RegistrationApiError(500, 'Error interno del servidor. Intenta nuevamente más tarde.')
+    }
+    throw new RegistrationApiError(response.status, 'No se pudo enviar la inscripción. Intenta nuevamente.')
   }
 
   const data: MakeRegistrationResponse = await response.json()
