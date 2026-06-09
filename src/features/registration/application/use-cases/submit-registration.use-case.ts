@@ -9,7 +9,11 @@ export async function submitRegistration(
   totalParticipants: number,
 ): Promise<RegistrationPayload> {
   const payload: RegistrationPayload = {
-    receipt_base64: values.receiptBase64,
+    receipt: {
+      base64: values.receiptBase64,
+      mime_type: values.receiptMimeType,
+      filename: values.receiptFileName,
+    },
     church_origin: values.churchOrigin,
     registrants: values.registrants.slice(0, totalParticipants).map((registrant, index) => ({
       rut: registrant.rut.trim(),

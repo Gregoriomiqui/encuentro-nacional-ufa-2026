@@ -12,7 +12,11 @@ export type RegistrationRegistrant = {
 }
 
 export type RegistrationPayload = {
-  receipt_base64: string
+  receipt: {
+    base64: string
+    mime_type: string
+    filename: string
+  }
   church_origin: string
   registrants: RegistrationRegistrant[]
 }
@@ -31,5 +35,6 @@ export type RegistrationFormValues = {
   churchOrigin: string
   receiptBase64: string
   receiptFileName: string
+  receiptMimeType: string
   registrants: RegistrationFormRegistrant[]
 }
