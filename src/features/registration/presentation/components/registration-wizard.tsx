@@ -3,6 +3,7 @@ import { useFormik } from 'formik'
 import type { FormikErrors, FormikProps, FormikTouched } from 'formik'
 import toast from 'react-hot-toast'
 import { Link } from 'react-router-dom'
+import imageCompression from 'browser-image-compression'
 
 import {
   MAX_COMPANIONS,
@@ -353,12 +354,14 @@ function createReceiptChangeHandler(formik: FormikProps<RegistrationFormValues>)
     if (!file) {
       await formik.setFieldValue('receiptBase64', '', false)
       await formik.setFieldValue('receiptFileName', '', false)
+      await formik.setFieldValue('receiptMimeType', '', false)
       return
     }
 
     if (!file.type.startsWith('image/')) {
       await formik.setFieldValue('receiptBase64', '', false)
       await formik.setFieldValue('receiptFileName', '', false)
+      await formik.setFieldValue('receiptMimeType', '', false)
       formik.setFieldError('receiptBase64', 'El comprobante debe ser una imagen (JPG, PNG o WEBP).')
       return
     }
@@ -366,18 +369,30 @@ function createReceiptChangeHandler(formik: FormikProps<RegistrationFormValues>)
     if (file.size > MAX_RECEIPT_SIZE_BYTES) {
       await formik.setFieldValue('receiptBase64', '', false)
       await formik.setFieldValue('receiptFileName', '', false)
+      await formik.setFieldValue('receiptMimeType', '', false)
       formik.setFieldError('receiptBase64', 'El comprobante supera el maximo permitido de 5 MB.')
       return
     }
 
     try {
-      const encoded = await fileToBase64WithPrefix(file)
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1200,
+        useWebWorker: true,
+        fileType: 'image/jpeg',
+      }
+      
+      const compressedFile = await imageCompression(file, options)
+      const encoded = await fileToBase64WithPrefix(compressedFile as File)
+      
       await formik.setFieldValue('receiptBase64', encoded, false)
-      await formik.setFieldValue('receiptFileName', file.name, false)
+      await formik.setFieldValue('receiptFileName', compressedFile.name || file.name, false)
+      await formik.setFieldValue('receiptMimeType', compressedFile.type || 'image/jpeg', false)
       formik.setFieldError('receiptBase64', undefined)
     } catch (error) {
       await formik.setFieldValue('receiptBase64', '', false)
       await formik.setFieldValue('receiptFileName', '', false)
+      await formik.setFieldValue('receiptMimeType', '', false)
       formik.setFieldError(
         'receiptBase64',
         error instanceof Error ? error.message : 'No fue posible procesar el comprobante.',
@@ -718,6 +733,7 @@ export function RegistrationWizard() {
       churchOrigin: '',
       receiptBase64: '',
       receiptFileName: '',
+      receiptMimeType: '',
       registrants: Array.from({ length: MAX_TOTAL_PARTICIPANTS }, () => createEmptyRegistrant()),
     }),
     [],
@@ -739,7 +755,10 @@ export function RegistrationWizard() {
         })
         const payloadPreview: RegistrationPayload = {
           ...payload,
-          receipt_base64: payload.receipt_base64 ? `${payload.receipt_base64.slice(0, 42)}...` : '',
+          receipt: {
+            ...payload.receipt,
+            base64: payload.receipt.base64 ? `${payload.receipt.base64.slice(0, 42)}...` : '',
+          },
         }
         setLatestPayload(payloadPreview)
         helpers.resetForm({ values: initialValues })
