@@ -10,7 +10,6 @@ import {
   REGISTRATION_FEE_CLP,
   type RegistrationFormRegistrant,
   type RegistrationFormValues,
-  type RegistrationPayload,
 } from '@features/registration/domain/entities/registration'
 import {
   DISTRICT_NAMES,
@@ -724,7 +723,7 @@ function PaymentStepPanel({ formik, totalAmount, onReceiptChange }: Readonly<Pay
 
 export function RegistrationWizard() {
   const [currentStep, setCurrentStep] = useState(0)
-  const [latestPayload, setLatestPayload] = useState<RegistrationPayload | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const initialValues = useMemo<RegistrationFormValues>(
     () => ({
@@ -745,26 +744,17 @@ export function RegistrationWizard() {
     validateOnChange: false,
     validate: (values) => validateByStep(values, currentStep),
     onSubmit: async (values, helpers) => {
+      setIsLoading(true)
       try {
         const totalParticipants = getSafeCompanionCount(values.companionCount) + 1
-        const payload = await toast.promise(submitRegistration(values, totalParticipants), {
-            loading: 'Enviando inscripción...',
-            success: 'Inscripción enviada correctamente.',
-          error: (error) =>
-              error instanceof Error ? error.message : 'Ocurrio un error inesperado al enviar la inscripción.',
-        })
-        const payloadPreview: RegistrationPayload = {
-          ...payload,
-          receipt: {
-            ...payload.receipt,
-            base64: payload.receipt.base64 ? `${payload.receipt.base64.slice(0, 42)}...` : '',
-          },
-        }
-        setLatestPayload(payloadPreview)
+        const result = await submitRegistration(values, totalParticipants)
+        toast.success(result.apiResponse.message)
         helpers.resetForm({ values: initialValues })
         setCurrentStep(0)
-      } catch {
-        // toast.promise already handles error notification
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : 'Ocurrió un error inesperado al enviar la inscripción.')
+      } finally {
+        setIsLoading(false)
       }
     },
   })
@@ -789,6 +779,15 @@ export function RegistrationWizard() {
 
   return (
     <div className="registration-module">
+      {isLoading && (
+        <div className="registration-overlay" aria-live="assertive" role="alert">
+          <div className="registration-overlay-content">
+            <div className="registration-spinner" aria-hidden="true" />
+            <p className="registration-overlay-title">Procesando tu inscripción...</p>
+            <p className="registration-overlay-warning">Por favor no refresques ni cambies de pantalla.</p>
+          </div>
+        </div>
+      )}
       <div className="registration-stepper" aria-label="Progreso de inscripción">
         {stepLabels.map((label, index) => {
           const isCompleted = index < currentStep
@@ -841,12 +840,7 @@ export function RegistrationWizard() {
 
       </form>
 
-      {latestPayload ? (
-        <section className="registration-payload" aria-live="polite">
-          <h4>Estructura enviada</h4>
-          <pre>{JSON.stringify(latestPayload, null, 2)}</pre>
-        </section>
-      ) : null}
+
     </div>
   )
 }

@@ -2,12 +2,17 @@ import type {
   RegistrationFormValues,
   RegistrationPayload,
 } from '@features/registration/domain/entities/registration'
-import { sendRegistration } from '@features/registration/infrastructure/repositories/make-registration.repository'
+import { sendRegistration, type MakeRegistrationResponse } from '@features/registration/infrastructure/repositories/make-registration.repository'
+
+export type SubmitRegistrationResult = {
+  payload: RegistrationPayload
+  apiResponse: MakeRegistrationResponse
+}
 
 export async function submitRegistration(
   values: RegistrationFormValues,
   totalParticipants: number,
-): Promise<RegistrationPayload> {
+): Promise<SubmitRegistrationResult> {
   const payload: RegistrationPayload = {
     receipt: {
       base64: values.receiptBase64,
@@ -25,7 +30,7 @@ export async function submitRegistration(
     })),
   }
 
-  await sendRegistration(payload)
+  const apiResponse = await sendRegistration(payload)
 
-  return payload
+  return { payload, apiResponse }
 }
