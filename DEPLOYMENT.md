@@ -17,7 +17,7 @@ Esta guía te ayudará a publicar el sitio web del Retiro Nacional UFA en GitHub
 3. Selecciona "New repository"
 4. Llena la información:
    - **Repository name**: `retiro-ufa` (o el nombre que prefieras)
-   - **Description**: "Sitio web oficial del Retiro Nacional UFA - UFAACYM Chile"
+   - **Description**: "Sitio web oficial del Retiro Nacional UFA - UFA ACYM Chile"
    - **Visibility**: Public (para GitHub Pages gratuito)
    - No marques "Add a README file" (ya tienes uno)
 5. Click en "Create repository"

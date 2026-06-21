@@ -85,7 +85,7 @@ Tu sitio estará en: `https://TU-USUARIO.github.io/retiro-ufa/`
 ## 🎯 Características Destacadas
 
 ### 💎 Diseño Profesional
-- Basado en el logo de UFAACYM Chile
+- Basado en el logo de UFA ACYM Chile
 - Paleta de colores rosa/magenta (#d91c7a)
 - Tipografía Google Fonts (Montserrat)
 - Gradientes y sombras modernas
@@ -304,7 +304,7 @@ open QUICKSTART.md
 ---
 
 **Desarrollado con ❤️ para el ministerio de mujeres**  
-**UFAACYM Chile - Unión Femenina Aliancista**  
+**UFA ACYM Chile - Unión Femenina Aliancista**  
 **Alianza Cristiana y Misionera - Chile**
 
 ---

@@ -128,7 +128,7 @@ export function TermsPage() {
               <h2 className="legal-heading">7. Derechos de Imagen</h2>
               <p className="legal-text">
                 Al inscribirse, la participante autoriza el uso de fotografías y videos tomados durante
-                el evento para fines promocionales y de registro del ministerio de UFAACYM Chile, sin
+                el evento para fines promocionales y de registro del ministerio de UFA ACYM Chile, sin
                 recibir compensación alguna. Si no desea aparecer en material audiovisual, debe
                 comunicarlo por escrito al equipo organizador.
               </p>

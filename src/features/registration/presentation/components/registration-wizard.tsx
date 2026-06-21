@@ -1,4 +1,4 @@
-import { useMemo, useState, type ChangeEvent, type Dispatch, type SetStateAction } from 'react'
+import { useMemo, useState, type ChangeEvent, type Dispatch, type FocusEvent, type SetStateAction } from 'react'
 import { useFormik } from 'formik'
 import type { FormikErrors, FormikProps, FormikTouched } from 'formik'
 import toast from 'react-hot-toast'
@@ -36,13 +36,47 @@ const POPULAR_EMAIL_DOMAINS = [
   'proton.me',
 ] as const
 
+const DIET_OPTIONS = [
+  { value: 'traditional', label: 'Alimentación tradicional' },
+  { value: 'vegetarian', label: 'Alimentación vegetariana' },
+] as const
+
+const WORKSHOP_OPTIONS = [
+  'Huellas de Fe: El legado de las mujeres en el Antiguo y Nuevo Testamento.',
+  'Administradoras, transformadas e influyentes',
+  'Transformadas para conectar: El arte de ver al prójimo con el Corazón',
+  'Mujeres y Sociedad: Siendo Luz en medio del Mundo',
+  'Maternidad: cuidando el corazón mientras cuidas de otros.',
+  'Acompañando a los adultos mayores, transformando el ambiente para que todos podamos participar.',
+  'Las voces que habitan nuestro interior: Aprendiendo a reconocer la voz de la gracia en medio de la crítica y la autoexigencia.',
+  'Puentes, no muros',
+  'Más que un Trabajo: Un Propósito en Cristo',
+  'La comunicación que transforma',
+  'Transformando cicatrices en un legado de esperanza',
+  'Mujer y cristiana',
+  'Transformadas para una misión',
+  'La mesa de los olvidados. Creados para la gloria de Dios',
+  'Misión, santidad y discernimiento en una era digital',
+  'La soledad, enemiga o aliada',
+  'Transformadas para reflejar a Cristo en un mundo de exposición',
+  'Mujer, adicciones, el camino a la sanidad y transformación.',
+  '¡Cuando el corazón se agita, El permanece firme!',
+  'Transformadas por la Verdad: El poder de la Palabra de Dios para renovar la vida de la mujer.',
+  'Del hogar a la sociedad: mujeres que viven y reflejan el evangelio.',
+  'Evangelio y Neurodivergencia: Comprendiendo el reino de Dios frente a la neurodiversidad.',
+  'Quién dices que soy',
+  'Nuestra identidad por Gracia',
+  'Contención emocional y espiritual para la mujer maltratada',
+  'Comunicación efectiva y resolución de conflictos: claves para relaciones transformadoras',
+] as const
+
 const BANK_INFO = {
-  bankName: 'Banco de Chile',
+  bankName: 'Banco Estado',
   accountType: 'Cuenta Corriente',
-  accountNumber: '00123456789',
+  accountNumber: '62900281957',
   holderName: 'Union Femenina Aliancista',
-  holderRut: '65.123.456-7',
-  contactEmail: 'tesoreria@ufaacym.cl',
+  holderRut: '70017500-6',
+  contactEmail: 'tesorera_ufa@acym.cl',
 } as const
 
 const currencyFormatter = new Intl.NumberFormat('es-CL', {
@@ -56,6 +90,9 @@ function createEmptyRegistrant(): RegistrationFormRegistrant {
     rut: '',
     firstName: '',
     lastName: '',
+    age: '',
+    dietType: '',
+    workshops: [],
     phone: '',
     email: '',
   }
@@ -199,6 +236,7 @@ function getParticipantStepErrors(registrant: RegistrationFormRegistrant) {
   const rut = registrant.rut.trim()
   const firstName = registrant.firstName.trim()
   const lastName = registrant.lastName.trim()
+  const age = Number(registrant.age)
   const phone = registrant.phone.trim()
   const email = registrant.email.trim()
 
@@ -218,6 +256,20 @@ function getParticipantStepErrors(registrant: RegistrationFormRegistrant) {
     errors.lastName = 'El apellido es obligatorio.'
   } else if (!NAME_VALIDATION_REGEX.test(lastName)) {
     errors.lastName = 'El apellido solo puede contener letras.'
+  }
+
+  if (!registrant.age.trim()) {
+    errors.age = 'La edad es obligatoria.'
+  } else if (!Number.isInteger(age) || age < 12 || age > 120) {
+    errors.age = 'Ingresa una edad válida entre 12 y 120 años.'
+  }
+
+  if (!registrant.dietType) {
+    errors.dietType = 'Debes seleccionar un tipo de alimentación.'
+  }
+
+  if (registrant.workshops.length !== 2) {
+    errors.workshops = 'Debes seleccionar exactamente 2 talleres.'
   }
 
   if (!phone) {
@@ -247,6 +299,8 @@ function getStepTouched(currentStep: number, totalParticipants: number): FormikT
   if (currentStep === totalParticipants + 1) {
     return {
       receiptBase64: true,
+      acceptsTerms: true,
+      acceptsImageAuthorization: true,
     }
   }
 
@@ -259,6 +313,9 @@ function getStepTouched(currentStep: number, totalParticipants: number): FormikT
             rut: true,
             firstName: true,
             lastName: true,
+            age: true,
+            dietType: true,
+            workshops: true,
             phone: true,
             email: true,
           }
@@ -320,6 +377,14 @@ function validateByStep(values: RegistrationFormValues, currentStep: number): Fo
     errors.receiptBase64 = 'Debes adjuntar el comprobante de pago.'
   }
 
+  if (currentStep === finalStep && !values.acceptsTerms) {
+    errors.acceptsTerms = 'Debes aceptar los términos y condiciones de inscripción.'
+  }
+
+  if (currentStep === finalStep && !values.acceptsImageAuthorization) {
+    errors.acceptsImageAuthorization = 'Debes autorizar el uso de imagen para completar la inscripción.'
+  }
+
   return errors
 }
 
@@ -328,8 +393,14 @@ async function advanceStep(
   currentStep: number,
   totalParticipants: number,
   finalStep: number,
+  setAttemptedSteps: Dispatch<SetStateAction<Record<number, boolean>>>,
   setCurrentStep: Dispatch<SetStateAction<number>>,
 ) {
+  setAttemptedSteps((previous) => ({
+    ...previous,
+    [currentStep]: true,
+  }))
+
   const touched = getStepTouched(currentStep, totalParticipants)
   await formik.setTouched(touched, true)
 
@@ -510,30 +581,44 @@ type ParticipantStepProps = {
   formik: FormikProps<RegistrationFormValues>
   participantIndex: number
   currentStep: number
+  showErrors: boolean
 }
 
-function ParticipantStepPanel({ formik, participantIndex, currentStep }: Readonly<ParticipantStepProps>) {
+function ParticipantStepPanel({ formik, participantIndex, currentStep, showErrors }: Readonly<ParticipantStepProps>) {
   const participantErrors = formik.errors.registrants?.[participantIndex] as
     | Partial<Record<keyof RegistrationFormRegistrant, string>>
-    | undefined
-
-  const participantTouched = formik.touched.registrants?.[participantIndex] as
-    | Partial<Record<keyof RegistrationFormRegistrant, boolean>>
     | undefined
 
   const emailSuggestions = buildEmailSuggestions(formik.values.registrants[participantIndex]?.email ?? '')
   const emailSuggestionsListId = `registrants.${participantIndex}.email-suggestions`
 
+  function toggleWorkshopSelection(workshopName: string) {
+    const currentSelection = formik.values.registrants[participantIndex]?.workshops ?? []
+    const hasWorkshop = currentSelection.includes(workshopName)
+
+    const nextSelection = hasWorkshop
+      ? currentSelection.filter((workshop) => workshop !== workshopName)
+      : currentSelection.length < 2
+        ? [...currentSelection, workshopName]
+        : currentSelection
+
+    formik.setFieldValue(`registrants.${participantIndex}.workshops`, nextSelection, true)
+  }
+
   function handleFormattedBlur(
     fieldName: string,
     formatter: (value: string) => string,
-    event: ChangeEvent<HTMLInputElement>,
+    event: FocusEvent<HTMLInputElement>,
   ) {
-    const formattedValue = formatter(event.currentTarget.value)
-    if (formattedValue !== event.currentTarget.value) {
-      formik.setFieldValue(fieldName, formattedValue, false)
+    const currentValue = event.currentTarget.value
+    const formattedValue = formatter(currentValue)
+
+    if (formattedValue !== currentValue) {
+      formik.setFieldValue(fieldName, formattedValue, true)
+      return
     }
-    formik.handleBlur(event)
+
+    formik.setFieldTouched(fieldName, true, true)
   }
 
   return (
@@ -557,7 +642,7 @@ function ParticipantStepPanel({ formik, participantIndex, currentStep }: Readonl
             onChange={(event) => {
               const nextValue = event.currentTarget.value
               if (RUT_ALLOWED_INPUT_REGEX.test(nextValue)) {
-                formik.setFieldValue(`registrants.${participantIndex}.rut`, nextValue, false)
+                formik.setFieldValue(`registrants.${participantIndex}.rut`, nextValue, true)
               }
             }}
             onBlur={(event) => {
@@ -566,7 +651,7 @@ function ParticipantStepPanel({ formik, participantIndex, currentStep }: Readonl
             className="registration-input"
             autoComplete="off"
           />
-          {participantTouched?.rut && participantErrors?.rut ? <span className="registration-error">{participantErrors.rut}</span> : null}
+          {showErrors && participantErrors?.rut ? <span className="registration-error">{participantErrors.rut}</span> : null}
         </label>
 
         <label className="registration-field" htmlFor={`registrants.${participantIndex}.firstName`}>
@@ -580,14 +665,14 @@ function ParticipantStepPanel({ formik, participantIndex, currentStep }: Readonl
             onChange={(event) => {
               const nextValue = event.currentTarget.value
               if (NAME_ALLOWED_INPUT_REGEX.test(nextValue)) {
-                formik.setFieldValue(`registrants.${participantIndex}.firstName`, nextValue, false)
+                formik.setFieldValue(`registrants.${participantIndex}.firstName`, nextValue, true)
               }
             }}
             onBlur={formik.handleBlur}
             className="registration-input"
             autoComplete="given-name"
           />
-          {participantTouched?.firstName && participantErrors?.firstName ? <span className="registration-error">{participantErrors.firstName}</span> : null}
+          {showErrors && participantErrors?.firstName ? <span className="registration-error">{participantErrors.firstName}</span> : null}
         </label>
 
         <label className="registration-field" htmlFor={`registrants.${participantIndex}.lastName`}>
@@ -601,14 +686,34 @@ function ParticipantStepPanel({ formik, participantIndex, currentStep }: Readonl
             onChange={(event) => {
               const nextValue = event.currentTarget.value
               if (NAME_ALLOWED_INPUT_REGEX.test(nextValue)) {
-                formik.setFieldValue(`registrants.${participantIndex}.lastName`, nextValue, false)
+                formik.setFieldValue(`registrants.${participantIndex}.lastName`, nextValue, true)
               }
             }}
             onBlur={formik.handleBlur}
             className="registration-input"
             autoComplete="family-name"
           />
-          {participantTouched?.lastName && participantErrors?.lastName ? <span className="registration-error">{participantErrors.lastName}</span> : null}
+          {showErrors && participantErrors?.lastName ? <span className="registration-error">{participantErrors.lastName}</span> : null}
+        </label>
+
+        <label className="registration-field" htmlFor={`registrants.${participantIndex}.age`}>
+          <span className="registration-label">Edad</span>
+          <input
+            id={`registrants.${participantIndex}.age`}
+            name={`registrants.${participantIndex}.age`}
+            type="number"
+            min={12}
+            max={120}
+            placeholder="Edad"
+            value={formik.values.registrants[participantIndex]?.age ?? ''}
+            onChange={(event) => {
+              formik.setFieldValue(`registrants.${participantIndex}.age`, event.currentTarget.value, true)
+            }}
+            onBlur={formik.handleBlur}
+            className="registration-input"
+            autoComplete="off"
+          />
+          {showErrors && participantErrors?.age ? <span className="registration-error">{participantErrors.age}</span> : null}
         </label>
 
         <label className="registration-field" htmlFor={`registrants.${participantIndex}.phone`}>
@@ -619,14 +724,16 @@ function ParticipantStepPanel({ formik, participantIndex, currentStep }: Readonl
             type="tel"
             placeholder="+56912345678"
             value={formik.values.registrants[participantIndex]?.phone ?? ''}
-            onChange={formik.handleChange}
+            onChange={(event) => {
+              formik.setFieldValue(`registrants.${participantIndex}.phone`, event.currentTarget.value, true)
+            }}
             onBlur={(event) => {
               handleFormattedBlur(`registrants.${participantIndex}.phone`, formatPhoneIfNeeded, event)
             }}
             className="registration-input"
             autoComplete="tel"
           />
-          {participantTouched?.phone && participantErrors?.phone ? <span className="registration-error">{participantErrors.phone}</span> : null}
+          {showErrors && participantErrors?.phone ? <span className="registration-error">{participantErrors.phone}</span> : null}
         </label>
 
         <label className="registration-field registration-field-wide" htmlFor={`registrants.${participantIndex}.email`}>
@@ -637,7 +744,9 @@ function ParticipantStepPanel({ formik, participantIndex, currentStep }: Readonl
             type="email"
             placeholder="correo@ejemplo.cl"
             value={formik.values.registrants[participantIndex]?.email ?? ''}
-            onChange={formik.handleChange}
+            onChange={(event) => {
+              formik.setFieldValue(`registrants.${participantIndex}.email`, event.currentTarget.value, true)
+            }}
             onBlur={formik.handleBlur}
             className="registration-input"
             autoComplete="email"
@@ -648,8 +757,65 @@ function ParticipantStepPanel({ formik, participantIndex, currentStep }: Readonl
               <option key={suggestion} value={suggestion} />
             ))}
           </datalist>
-          {participantTouched?.email && participantErrors?.email ? <span className="registration-error">{participantErrors.email}</span> : null}
+          {showErrors && participantErrors?.email ? <span className="registration-error">{participantErrors.email}</span> : null}
         </label>
+
+        <fieldset className="registration-field registration-field-wide registration-choice-group">
+          <legend className="registration-label">Alimentación</legend>
+          <div className="registration-radio-group">
+            {DIET_OPTIONS.map((dietOption) => (
+              <label key={dietOption.value} className="registration-radio-option" htmlFor={`registrants.${participantIndex}.dietType.${dietOption.value}`}>
+                <input
+                  id={`registrants.${participantIndex}.dietType.${dietOption.value}`}
+                  type="radio"
+                  name={`registrants.${participantIndex}.dietType`}
+                  value={dietOption.value}
+                  checked={formik.values.registrants[participantIndex]?.dietType === dietOption.value}
+                  onChange={(event) => {
+                    formik.setFieldValue(`registrants.${participantIndex}.dietType`, event.currentTarget.value, true)
+                  }}
+                  onBlur={formik.handleBlur}
+                />
+                <span>{dietOption.label}</span>
+              </label>
+            ))}
+          </div>
+          {showErrors && participantErrors?.dietType ? <span className="registration-error">{participantErrors.dietType}</span> : null}
+        </fieldset>
+
+        <fieldset className="registration-field registration-field-wide registration-choice-group">
+          <legend className="registration-label">Selecciona dos talleres de tu interés</legend>
+          <p className="registration-helper-text">Debes elegir exactamente 2 talleres para esta participante.</p>
+          <div className="registration-workshops-grid" role="group" aria-label="Listado de talleres disponibles">
+            {WORKSHOP_OPTIONS.map((workshopName, workshopIndex) => {
+              const selectedWorkshops = formik.values.registrants[participantIndex]?.workshops ?? []
+              const isSelected = selectedWorkshops.includes(workshopName)
+              const disableOption = !isSelected && selectedWorkshops.length >= 2
+
+              return (
+                <label key={workshopName} className={`registration-workshop-option ${disableOption ? 'is-disabled' : ''}`} htmlFor={`registrants.${participantIndex}.workshops.${workshopIndex}`}>
+                  <input
+                    id={`registrants.${participantIndex}.workshops.${workshopIndex}`}
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={() => {
+                      toggleWorkshopSelection(workshopName)
+                    }}
+                    onBlur={() => {
+                      formik.setFieldTouched(`registrants.${participantIndex}.workshops`, true, true)
+                    }}
+                    disabled={disableOption}
+                  />
+                  <span>{workshopName}</span>
+                </label>
+              )
+            })}
+          </div>
+          <p className="registration-selection-counter">
+            Seleccionados: {(formik.values.registrants[participantIndex]?.workshops ?? []).length}/2
+          </p>
+          {showErrors && participantErrors?.workshops ? <span className="registration-error">{participantErrors.workshops}</span> : null}
+        </fieldset>
       </div>
     </section>
   )
@@ -673,6 +839,9 @@ function PaymentStepPanel({ formik, totalAmount, onReceiptChange }: Readonly<Pay
       </p>
 
       <div className="bank-card" role="note" aria-label="Datos bancarios">
+        <p className="registration-bank-warning">
+          Importante: solo se debe transferir a los datos de la cuenta de Banco Estado indicados a continuación.
+        </p>
         <p>
           <strong>Banco:</strong> {BANK_INFO.bankName}
         </p>
@@ -711,6 +880,36 @@ function PaymentStepPanel({ formik, totalAmount, onReceiptChange }: Readonly<Pay
         <p className="registration-error">{formik.errors.receiptBase64}</p>
       ) : null}
 
+      <div className="registration-consent-group">
+        <label className="registration-checkbox-option" htmlFor="acceptsTerms">
+          <input
+            id="acceptsTerms"
+            name="acceptsTerms"
+            type="checkbox"
+            checked={formik.values.acceptsTerms}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          <span>Acepto los términos y condiciones de inscripción.</span>
+        </label>
+        {formik.touched.acceptsTerms && formik.errors.acceptsTerms ? <p className="registration-error">{formik.errors.acceptsTerms}</p> : null}
+
+        <label className="registration-checkbox-option" htmlFor="acceptsImageAuthorization">
+          <input
+            id="acceptsImageAuthorization"
+            name="acceptsImageAuthorization"
+            type="checkbox"
+            checked={formik.values.acceptsImageAuthorization}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          <span>Autorizo el uso de mi imagen con fines promocionales, institucionales y de registro del ministerio UFA.</span>
+        </label>
+        {formik.touched.acceptsImageAuthorization && formik.errors.acceptsImageAuthorization ? (
+          <p className="registration-error">{formik.errors.acceptsImageAuthorization}</p>
+        ) : null}
+      </div>
+
       <div className="registration-legal-note">
         <p>
           Al enviar la inscripción aceptas los <Link to="/terminos-y-condiciones">Terminos y Condiciones</Link> y la{' '}
@@ -724,6 +923,7 @@ function PaymentStepPanel({ formik, totalAmount, onReceiptChange }: Readonly<Pay
 export function RegistrationWizard() {
   const [currentStep, setCurrentStep] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
+  const [attemptedSteps, setAttemptedSteps] = useState<Record<number, boolean>>({})
 
   const initialValues = useMemo<RegistrationFormValues>(
     () => ({
@@ -733,6 +933,8 @@ export function RegistrationWizard() {
       receiptBase64: '',
       receiptFileName: '',
       receiptMimeType: '',
+      acceptsTerms: false,
+      acceptsImageAuthorization: false,
       registrants: Array.from({ length: MAX_TOTAL_PARTICIPANTS }, () => createEmptyRegistrant()),
     }),
     [],
@@ -750,6 +952,7 @@ export function RegistrationWizard() {
         const result = await submitRegistration(values, totalParticipants)
         toast.success(result.apiResponse.message)
         helpers.resetForm({ values: initialValues })
+        setAttemptedSteps({})
         setCurrentStep(0)
       } catch (error) {
         toast.error(error instanceof Error ? error.message : 'Ocurrió un error inesperado al enviar la inscripción.')
@@ -766,6 +969,7 @@ export function RegistrationWizard() {
   const participantIndex = currentStep - 1
   const totalAmount = totalParticipants * REGISTRATION_FEE_CLP
   const handleReceiptChange = createReceiptChangeHandler(formik)
+  const showParticipantErrors = Boolean(attemptedSteps[currentStep])
 
   let currentPanel = <PaymentStepPanel formik={formik} totalAmount={totalAmount} onReceiptChange={handleReceiptChange} />
 
@@ -774,7 +978,14 @@ export function RegistrationWizard() {
   }
 
   if (isParticipantStep) {
-    currentPanel = <ParticipantStepPanel formik={formik} participantIndex={participantIndex} currentStep={currentStep} />
+    currentPanel = (
+      <ParticipantStepPanel
+        formik={formik}
+        participantIndex={participantIndex}
+        currentStep={currentStep}
+        showErrors={showParticipantErrors}
+      />
+    )
   }
 
   return (
@@ -826,10 +1037,10 @@ export function RegistrationWizard() {
             <button
               type="button"
               className="button button-primary"
-              onClick={() => advanceStep(formik, currentStep, totalParticipants, finalStep, setCurrentStep)}
+              onClick={() => advanceStep(formik, currentStep, totalParticipants, finalStep, setAttemptedSteps, setCurrentStep)}
               disabled={formik.isSubmitting}
             >
-              {currentStep + 1 === finalStep ? 'Ir a pago' : 'Siguiente'}
+              Siguiente
             </button>
           ) : (
             <button type="submit" className="button button-primary" disabled={formik.isSubmitting}>

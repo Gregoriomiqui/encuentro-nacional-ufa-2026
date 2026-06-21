@@ -17,7 +17,7 @@ export function PrivacyPage() {
             <section className="legal-section">
               <h2 className="legal-heading">1. Introducción</h2>
               <p className="legal-text">
-                La Unión Femenina Aliancista (UFA) de la Alianza Cristiana y Misionera en Chile (UFAACYM Chile) se
+                La Unión Femenina Aliancista (UFA) de la Alianza Cristiana y Misionera en Chile (UFA ACYM Chile) se
                 compromete a proteger la privacidad y los datos personales de las participantes del Encuentro Nacional UFA
                 "Mujeres Transformadas". Esta Política de Privacidad describe cómo recopilamos, usamos, almacenamos y
                 protegemos su información personal.
@@ -33,7 +33,7 @@ export function PrivacyPage() {
               <p className="legal-text">El responsable del tratamiento de sus datos personales es:</p>
               <div className="info-box">
                 <p>
-                  <strong>Organización:</strong> UFAACYM Chile (Unión Femenina Aliancista de la Alianza Cristiana y
+                  <strong>Organización:</strong> UFA ACYM Chile (Unión Femenina Aliancista de la Alianza Cristiana y
                   Misionera - Chile)
                 </p>
                 <p>

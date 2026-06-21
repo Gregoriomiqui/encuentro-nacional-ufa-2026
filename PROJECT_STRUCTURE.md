@@ -241,4 +241,4 @@ Para preguntas sobre el código:
 
 **Última actualización**: Mayo 2026
 **Versión**: 1.0.0
-**Desarrollado con ❤️ para UFAACYM Chile**
+**Desarrollado con ❤️ para UFA ACYM Chile**

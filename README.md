@@ -54,7 +54,7 @@ projectUFA/
 ├── script.js                       # JavaScript
 ├── README.md                       # Este archivo
 └── assets/                         # Recursos (logo, imágenes)
-    └── logo-ufa.png               # Logo UFAACYM Chile
+    └── logo-ufa.png               # Logo UFA ACYM Chile
 ```
 
 ## 🎨 Paleta de Colores
@@ -209,18 +209,18 @@ Modifica el enlace de Google Fonts en el `<head>` y la variable:
 
 ## 📄 Licencia
 
-© 2026 UFAACYM Chile. Todos los derechos reservados.
+© 2026 UFA ACYM Chile. Todos los derechos reservados.
 
 ## 👥 Contacto
 
 Para consultas sobre el sitio web o el evento:
 - A través de tu iglesia local de la Alianza Cristiana y Misionera
-- Canales oficiales de UFAACYM Chile
+- Canales oficiales de UFA ACYM Chile
 
 ## 🙏 Créditos
 
 - Diseño y desarrollo: [Tu nombre/equipo]
-- Logo: UFAACYM Chile
+- Logo: UFA ACYM Chile
 - Fuentes: Google Fonts (Montserrat)
 - Iconos: SVG personalizados
 

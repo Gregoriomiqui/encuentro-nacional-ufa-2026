@@ -9,7 +9,7 @@ export function SiteHeader({ title }: SiteHeaderProps) {
     <header className="header">
       <nav className="nav-container" aria-label="Navegacion principal">
         <div className="logo-section">
-          <img src="/assets/logo-ufa.png" alt="Logo UFAACYM Chile" className="logo" />
+          <img src="/assets/logo-ufa.png" alt="Logo UFA ACYM Chile" className="logo" />
           <h1 className="site-title">{title}</h1>
         </div>
         <ul className="nav-menu">

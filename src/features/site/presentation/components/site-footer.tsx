@@ -6,7 +6,7 @@ export function SiteFooter() {
       <div className="container">
         <div className="footer-content">
           <div className="footer-section">
-            <img src="/assets/logo-ufa.png" alt="Logo UFAACYM Chile" className="footer-logo" />
+            <img src="/assets/logo-ufa.png" alt="Logo UFA ACYM Chile" className="footer-logo" />
             <p className="footer-text">
               Union Femenina Aliancista
               <br />
@@ -33,7 +33,7 @@ export function SiteFooter() {
           <div className="footer-section">
             <h3 className="footer-title">Legal</h3>
             <p className="footer-text-small">
-              © 2026 UFAACYM Chile
+              © 2026 UFA ACYM Chile
               <br />
               Todos los derechos reservados
             </p>
