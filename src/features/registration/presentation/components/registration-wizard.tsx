@@ -92,6 +92,7 @@ function createEmptyRegistrant(): RegistrationFormRegistrant {
     lastName: '',
     age: '',
     dietType: '',
+    needsAccommodation: false,
     workshops: [],
     phone: '',
     email: '',
@@ -268,8 +269,8 @@ function getParticipantStepErrors(registrant: RegistrationFormRegistrant) {
     errors.dietType = 'Debes seleccionar un tipo de alimentación.'
   }
 
-  if (registrant.workshops.length !== 2) {
-    errors.workshops = 'Debes seleccionar exactamente 2 talleres.'
+  if (registrant.workshops.length < 1 || registrant.workshops.length > 2) {
+    errors.workshops = 'Debes seleccionar entre 1 y 2 talleres.'
   }
 
   if (!phone) {
@@ -315,6 +316,7 @@ function getStepTouched(currentStep: number, totalParticipants: number): FormikT
             lastName: true,
             age: true,
             dietType: true,
+            needsAccommodation: true,
             workshops: true,
             phone: true,
             email: true,
@@ -784,8 +786,32 @@ function ParticipantStepPanel({ formik, participantIndex, currentStep, showError
         </fieldset>
 
         <fieldset className="registration-field registration-field-wide registration-choice-group">
-          <legend className="registration-label">Selecciona dos talleres de tu interés</legend>
-          <p className="registration-helper-text">Debes elegir exactamente 2 talleres para esta participante.</p>
+          <legend className="registration-label">Alojamiento</legend>
+          <label
+            className="registration-checkbox-option"
+            htmlFor={`registrants.${participantIndex}.needsAccommodation`}
+          >
+            <input
+              id={`registrants.${participantIndex}.needsAccommodation`}
+              name={`registrants.${participantIndex}.needsAccommodation`}
+              type="checkbox"
+              checked={formik.values.registrants[participantIndex]?.needsAccommodation ?? false}
+              onChange={(event) => {
+                formik.setFieldValue(
+                  `registrants.${participantIndex}.needsAccommodation`,
+                  event.currentTarget.checked,
+                  true,
+                )
+              }}
+              onBlur={formik.handleBlur}
+            />
+            <span>La participante necesita alojamiento.</span>
+          </label>
+        </fieldset>
+
+        <fieldset className="registration-field registration-field-wide registration-choice-group">
+          <legend className="registration-label">Selecciona uno o dos talleres de tu interés</legend>
+          <p className="registration-helper-text">Debes elegir entre 1 y 2 talleres para esta participante.</p>
           <div className="registration-workshops-grid" role="group" aria-label="Listado de talleres disponibles">
             {WORKSHOP_OPTIONS.map((workshopName, workshopIndex) => {
               const selectedWorkshops = formik.values.registrants[participantIndex]?.workshops ?? []

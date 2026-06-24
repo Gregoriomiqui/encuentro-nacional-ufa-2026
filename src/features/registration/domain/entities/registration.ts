@@ -8,6 +8,7 @@ export type RegistrationRegistrant = {
   last_name: string
   age: number
   diet_type: 'traditional' | 'vegetarian'
+  needs_accommodation: boolean
   workshop_choices: string[]
   phone: string
   email: string
@@ -32,6 +33,7 @@ export type RegistrationFormRegistrant = {
   lastName: string
   age: string
   dietType: '' | 'traditional' | 'vegetarian'
+  needsAccommodation: boolean
   workshops: string[]
   phone: string
   email: string

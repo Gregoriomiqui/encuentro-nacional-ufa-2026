@@ -38,6 +38,7 @@ export async function submitRegistration(
       last_name: registrant.lastName.trim(),
       age: Number(registrant.age),
       diet_type: toRegistrantDietType(registrant.dietType),
+      needs_accommodation: registrant.needsAccommodation,
       workshop_choices: registrant.workshops,
       phone: registrant.phone.trim(),
       email: registrant.email.trim().toLowerCase(),
