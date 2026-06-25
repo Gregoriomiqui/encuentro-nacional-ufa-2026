@@ -2,12 +2,12 @@
 
 ## Copyright
 
-© 2026 UFAACYM Chile (Unión Femenina Aliancista de la Alianza Cristiana y Misionera - Chile)
+© 2026 UFA ACYM Chile (Unión Femenina Aliancista de la Alianza Cristiana y Misionera - Chile)
 Todos los derechos reservados.
 
 ## Términos de Uso
 
-Este sitio web y su contenido son propiedad de UFAACYM Chile, una organización ministerial de la Alianza Cristiana y Misionera en Chile.
+Este sitio web y su contenido son propiedad de UFA ACYM Chile, una organización ministerial de la Alianza Cristiana y Misionera en Chile.
 
 ### Permitido:
 
@@ -19,7 +19,7 @@ Este sitio web y su contenido son propiedad de UFAACYM Chile, una organización 
 ### No Permitido:
 
 ❌ Reproducir, copiar o redistribuir el contenido sin permiso escrito
-❌ Usar el logo o marca de UFAACYM Chile sin autorización
+❌ Usar el logo o marca de UFA ACYM Chile sin autorización
 ❌ Modificar el contenido y presentarlo como propio
 ❌ Usar el sitio o su contenido con fines comerciales
 ❌ Crear trabajos derivados sin autorización previa
@@ -29,7 +29,7 @@ Este sitio web y su contenido son propiedad de UFAACYM Chile, una organización 
 
 Este sitio utiliza:
 - **Google Fonts** (Montserrat): Licencia Open Font License
-- **Código base**: Desarrollado específicamente para UFAACYM Chile
+- **Código base**: Desarrollado específicamente para UFA ACYM Chile
 
 ## Marca Registrada
 
@@ -44,7 +44,7 @@ El tratamiento de datos personales se rige por:
 
 ## Disclaimer (Descargo de Responsabilidad)
 
-Este sitio web se proporciona "tal cual" sin garantías de ningún tipo, expresas o implícitas. UFAACYM Chile no se hace responsable de:
+Este sitio web se proporciona "tal cual" sin garantías de ningún tipo, expresas o implícitas. UFA ACYM Chile no se hace responsable de:
 
 - Errores u omisiones en el contenido
 - Interrupciones o errores técnicos
@@ -60,12 +60,12 @@ Esta licencia se rige por las leyes de la República de Chile. Cualquier disputa
 Para solicitudes de permisos, preguntas sobre licencias o uso del contenido:
 
 - Contacta a través de tu iglesia local de la Alianza Cristiana y Misionera
-- Usa los canales oficiales de comunicación de UFAACYM Chile
+- Usa los canales oficiales de comunicación de UFA ACYM Chile
 - Escribe a través del formulario de contacto del sitio web
 
 ## Modificaciones
 
-UFAACYM Chile se reserva el derecho de modificar estos términos de licencia en cualquier momento. Los cambios serán efectivos inmediatamente después de su publicación en el sitio web.
+UFA ACYM Chile se reserva el derecho de modificar estos términos de licencia en cualquier momento. Los cambios serán efectivos inmediatamente después de su publicación en el sitio web.
 
 ---
 
@@ -77,12 +77,12 @@ UFAACYM Chile se reserva el derecho de modificar estos términos de licencia en 
 
 ## Para Desarrolladores
 
-Si estás contribuyendo al código de este proyecto como parte del equipo autorizado, tu trabajo se considera "work for hire" (trabajo por encargo) para UFAACYM Chile, y todos los derechos pertenecen a la organización.
+Si estás contribuyendo al código de este proyecto como parte del equipo autorizado, tu trabajo se considera "work for hire" (trabajo por encargo) para UFA ACYM Chile, y todos los derechos pertenecen a la organización.
 
 ### Atribución
 
 Al contribuir a este proyecto, aceptas que:
-1. Tu código pasa a ser propiedad de UFAACYM Chile
+1. Tu código pasa a ser propiedad de UFA ACYM Chile
 2. Puede ser usado, modificado y distribuido por la organización
 3. No reclamarás derechos de autor sobre tus contribuciones
 4. Tu nombre puede ser listado en los créditos si lo deseas

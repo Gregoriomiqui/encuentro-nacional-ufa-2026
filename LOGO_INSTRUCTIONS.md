@@ -28,12 +28,12 @@ El sitio actualmente usa un logo SVG temporal. Sigue estos pasos para usar el lo
    
    Cambia:
    ```html
-   <img src="assets/logo-ufa.svg" alt="Logo UFAACYM Chile" class="logo">
+   <img src="assets/logo-ufa.svg" alt="Logo UFA ACYM Chile" class="logo">
    ```
    
    Por:
    ```html
-   <img src="assets/logo-ufa.png" alt="Logo UFAACYM Chile" class="logo">
+   <img src="assets/logo-ufa.png" alt="Logo UFA ACYM Chile" class="logo">
    ```
 
 4. **Commit y push**
@@ -71,7 +71,7 @@ Para máxima compatibilidad:
 <picture>
   <source srcset="assets/logo-ufa.webp" type="image/webp">
   <source srcset="assets/logo-ufa.png" type="image/png">
-  <img src="assets/logo-ufa.png" alt="Logo UFAACYM Chile" class="logo">
+  <img src="assets/logo-ufa.png" alt="Logo UFA ACYM Chile" class="logo">
 </picture>
 ```
 

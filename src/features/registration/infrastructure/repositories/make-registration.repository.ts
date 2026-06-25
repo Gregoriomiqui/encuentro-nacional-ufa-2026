@@ -34,7 +34,7 @@ export async function sendRegistration(payload: RegistrationPayload): Promise<Ma
       throw new RegistrationApiError(400, 'Inscripción fallida')
     }
     if (response.status === 409) {
-      throw new RegistrationApiError(409, 'Falla en comprobante de pago, ponerse en contacto con equipo de UFA Nacional')
+      throw new RegistrationApiError(409, 'Falla en comprobante de pago, ponerse en contacto con el directorio nacional de la Unión Femenina Aliancista')
     }
     if (response.status === 500) {
       throw new RegistrationApiError(500, 'Error interno del servidor. Intenta nuevamente más tarde.')

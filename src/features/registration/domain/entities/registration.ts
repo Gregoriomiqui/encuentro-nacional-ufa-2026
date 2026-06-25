@@ -6,6 +6,10 @@ export type RegistrationRegistrant = {
   rut: string
   first_name: string
   last_name: string
+  age: number
+  diet_type: 'traditional' | 'vegetarian'
+  needs_accommodation: boolean
+  workshop_choices: string[]
   phone: string
   email: string
   is_primary_contact: boolean
@@ -18,6 +22,8 @@ export type RegistrationPayload = {
     filename: string
   }
   church_origin: string
+  accepts_terms: boolean
+  accepts_image_authorization: boolean
   registrants: RegistrationRegistrant[]
 }
 
@@ -25,6 +31,10 @@ export type RegistrationFormRegistrant = {
   rut: string
   firstName: string
   lastName: string
+  age: string
+  dietType: '' | 'traditional' | 'vegetarian'
+  needsAccommodation: boolean
+  workshops: string[]
   phone: string
   email: string
 }
@@ -36,5 +46,7 @@ export type RegistrationFormValues = {
   receiptBase64: string
   receiptFileName: string
   receiptMimeType: string
+  acceptsTerms: boolean
+  acceptsImageAuthorization: boolean
   registrants: RegistrationFormRegistrant[]
 }

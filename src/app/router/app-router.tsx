@@ -21,7 +21,7 @@ export function AppRouter() {
       <Route
         path="/inscripcion"
         element={
-          <SiteLayout title="UFAACYM Chile">
+          <SiteLayout title="UFA ACYM Chile">
             <RegistrationPage />
           </SiteLayout>
         }
@@ -29,7 +29,7 @@ export function AppRouter() {
       <Route
         path="/terminos-y-condiciones"
         element={
-          <SiteLayout title="UFAACYM Chile">
+          <SiteLayout title="UFA ACYM Chile">
             <TermsPage />
           </SiteLayout>
         }
@@ -37,7 +37,7 @@ export function AppRouter() {
       <Route
         path="/politica-de-privacidad"
         element={
-          <SiteLayout title="UFAACYM Chile">
+          <SiteLayout title="UFA ACYM Chile">
             <PrivacyPage />
           </SiteLayout>
         }
