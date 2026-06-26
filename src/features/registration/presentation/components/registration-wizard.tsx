@@ -1,4 +1,4 @@
-import { useMemo, useState, type ChangeEvent, type Dispatch, type FocusEvent, type SetStateAction } from 'react'
+import { useEffect, useMemo, useState, type ChangeEvent, type Dispatch, type FocusEvent, type SetStateAction } from 'react'
 import { useFormik } from 'formik'
 import type { FormikErrors, FormikProps, FormikTouched } from 'formik'
 import toast from 'react-hot-toast'
@@ -17,6 +17,8 @@ import {
   isChurchInDistrict,
 } from '@features/registration/domain/entities/church-directory'
 import { submitRegistration } from '@features/registration/application/use-cases/submit-registration.use-case'
+import { RegistrationStepper } from './registration-stepper'
+import { RegistrationWelcome } from './registration-welcome'
 
 const MAX_TOTAL_PARTICIPANTS = MAX_COMPANIONS + 1
 const MAX_RECEIPT_SIZE_BYTES = 5 * 1024 * 1024
@@ -125,12 +127,6 @@ async function fileToBase64WithPrefix(file: File): Promise<string> {
 
     reader.readAsDataURL(file)
   })
-}
-
-function buildStepLabels(totalParticipants: number): string[] {
-  const participantSteps = Array.from({ length: totalParticipants }, (_, index) => `Participante ${index + 1}`)
-
-  return ['Cantidad', ...participantSteps, 'Pago']
 }
 
 function getSafeCompanionCount(value: unknown): number {
@@ -738,7 +734,7 @@ function ParticipantStepPanel({ formik, participantIndex, currentStep, showError
           {showErrors && participantErrors?.phone ? <span className="registration-error">{participantErrors.phone}</span> : null}
         </label>
 
-        <label className="registration-field registration-field-wide" htmlFor={`registrants.${participantIndex}.email`}>
+        <label className="registration-field" htmlFor={`registrants.${participantIndex}.email`}>
           <span className="registration-label">Email</span>
           <input
             id={`registrants.${participantIndex}.email`}
@@ -762,7 +758,7 @@ function ParticipantStepPanel({ formik, participantIndex, currentStep, showError
           {showErrors && participantErrors?.email ? <span className="registration-error">{participantErrors.email}</span> : null}
         </label>
 
-        <fieldset className="registration-field registration-field-wide registration-choice-group">
+        <fieldset className="registration-field registration-choice-group">
           <legend className="registration-label">Alimentación</legend>
           <div className="registration-radio-group">
             {DIET_OPTIONS.map((dietOption) => (
@@ -785,7 +781,7 @@ function ParticipantStepPanel({ formik, participantIndex, currentStep, showError
           {showErrors && participantErrors?.dietType ? <span className="registration-error">{participantErrors.dietType}</span> : null}
         </fieldset>
 
-        <fieldset className="registration-field registration-field-wide registration-choice-group">
+        <fieldset className="registration-field registration-choice-group">
           <legend className="registration-label">Alojamiento</legend>
           <label
             className="registration-checkbox-option"
@@ -989,13 +985,30 @@ export function RegistrationWizard() {
   })
 
   const totalParticipants = getSafeCompanionCount(formik.values.companionCount) + 1
-  const stepLabels = buildStepLabels(totalParticipants)
   const finalStep = totalParticipants + 1
   const isParticipantStep = currentStep > 0 && currentStep < finalStep
   const participantIndex = currentStep - 1
   const totalAmount = totalParticipants * REGISTRATION_FEE_CLP
   const handleReceiptChange = createReceiptChangeHandler(formik)
   const showParticipantErrors = Boolean(attemptedSteps[currentStep])
+
+  // Auto-scroll to first input on step change in mobile
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (window.innerWidth > 768) return
+    if (currentStep === 0) return
+
+    // Small delay to allow DOM to update
+    const timer = setTimeout(() => {
+      const firstInput = document.querySelector('.registration-card input, .registration-card select, .registration-card textarea') as HTMLElement
+      if (firstInput) {
+        firstInput.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        firstInput.focus()
+      }
+    }, 100)
+
+    return () => clearTimeout(timer)
+  }, [currentStep])
 
   let currentPanel = <PaymentStepPanel formik={formik} totalAmount={totalAmount} onReceiptChange={handleReceiptChange} />
 
@@ -1025,24 +1038,10 @@ export function RegistrationWizard() {
           </div>
         </div>
       )}
-      <div className="registration-stepper" aria-label="Progreso de inscripción">
-        {stepLabels.map((label, index) => {
-          const isCompleted = index < currentStep
-          const isActive = index === currentStep
+      
+      <RegistrationStepper currentStep={currentStep + 1} totalSteps={finalStep + 1} />
 
-          return (
-            <div
-              key={label}
-              className={`registration-step ${isCompleted ? 'is-completed' : ''} ${isActive ? 'is-active' : ''}`}
-            >
-              <span className="registration-step-index" aria-hidden="true">
-                {index + 1}
-              </span>
-              <span className="registration-step-label">{label}</span>
-            </div>
-          )
-        })}
-      </div>
+      {currentStep === 0 && <RegistrationWelcome />}
 
       <form className="registration-card" onSubmit={formik.handleSubmit} noValidate>
         {currentPanel}

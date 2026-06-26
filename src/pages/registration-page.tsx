@@ -2,16 +2,14 @@ import { RegistrationWizard } from '@features/registration/presentation/componen
 
 export function RegistrationPage() {
   return (
-    <main className="main-content">
-      <section className="document-hero">
+    <main className="main-content registration-main-content">
+      <section className="document-hero registration-hero">
         <div className="container">
           <h1 className="document-title">Inscripción Encuentro Nacional UFA 2026</h1>
-          <p className="document-subtitle">Completa tus datos, carga comprobante y confirma tu participacion</p>
-          <p className="document-date">Valor por participante: $50.000 CLP</p>
         </div>
       </section>
 
-      <section className="section section-alt">
+      <section className="section section-alt registration-content-section">
         <div className="container">
           <div className="inscription-content">
             <RegistrationWizard />
