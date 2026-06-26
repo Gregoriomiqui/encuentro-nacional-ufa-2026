@@ -51,7 +51,7 @@ export function MobileNavMenu({ isOpen, onClose, onMenuItemClick }: Readonly<Mob
               onClick={handleMenuItemClick}
             >
               <span className="nav-icon">🏠</span>
-              <span>INICIO</span>
+              <span>Inicio</span>
             </NavLink>
           </li>
           <li>
@@ -61,8 +61,18 @@ export function MobileNavMenu({ isOpen, onClose, onMenuItemClick }: Readonly<Mob
               onClick={handleMenuItemClick}
             >
               <span className="nav-icon">📅</span>
-              <span>AGENDA</span>
+              <span>El Evento</span>
             </Link>
+          </li>
+          <li>
+            <NavLink
+              to="/inscripcion"
+              className={({ isActive }) => `mobile-nav-item${isActive ? ' active' : ''}`}
+              onClick={handleMenuItemClick}
+            >
+              <span className="nav-icon">📝</span>
+              <span>Inscripción</span>
+            </NavLink>
           </li>
           <li>
             <Link
@@ -71,30 +81,10 @@ export function MobileNavMenu({ isOpen, onClose, onMenuItemClick }: Readonly<Mob
               onClick={handleMenuItemClick}
             >
               <span className="nav-icon">📍</span>
-              <span>UBICACIÓN</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/#faq"
-              className="mobile-nav-item"
-              onClick={handleMenuItemClick}
-            >
-              <span className="nav-icon">❓</span>
-              <span>FAQ</span>
+              <span>Contacto</span>
             </Link>
           </li>
         </ul>
-
-        <div className="mobile-nav-actions">
-          <NavLink
-            to="/inscripcion"
-            className="mobile-nav-cta-button"
-            onClick={handleMenuItemClick}
-          >
-            INSCRIBETE AQUÍ
-          </NavLink>
-        </div>
       </nav>
     </>
   )
