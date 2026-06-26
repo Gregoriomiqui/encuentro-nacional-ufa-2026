@@ -143,9 +143,18 @@ a:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: var(--spacing-xs) var(--spacing-md);
     max-width: 1200px;
     margin: 0 auto;
+}
+
+/* Desktop Navigation */
+.desktop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: var(--spacing-lg);
 }
 
 .logo-section {
@@ -155,12 +164,12 @@ a:hover {
 }
 
 .logo {
-    height: 62px;
+    height: 54px;
     width: auto;
 }
 
 .site-title {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     font-weight: var(--font-weight-bold);
     color: var(--primary-color);
     margin: 0;
@@ -187,11 +196,79 @@ a:hover {
     background-color: var(--gray-50);
 }
 
+/* Mobile Navigation */
+.mobile-header {
+    display: none;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+}
+
+.mobile-menu-toggle {
+    background: none;
+    border: none;
+    font-size: 1.55rem;
+    cursor: pointer;
+    color: var(--white);
+    padding: 0;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    transition: background-color var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.mobile-menu-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.hamburger-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-header-title {
+    flex: 1;
+    text-align: center;
+}
+
+.mobile-site-title {
+    font-size: 1rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--white);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+}
+
+.mobile-header-spacer {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+}
+
 /* ===================================
    Main Content
    =================================== */
 .main-content {
     min-height: calc(100vh - 200px);
+}
+
+.registration-main-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background-color: var(--gray-50);
+}
+
+.registration-content-section {
+    flex: 1;
 }
 
 /* ===================================
@@ -370,6 +447,10 @@ a:hover {
     background-color: var(--gray-50);
 }
 
+.registration-hero + .section.section-alt {
+    padding-top: var(--spacing-md);
+}
+
 .section-title {
     font-size: 2.5rem;
     text-align: center;
@@ -508,6 +589,15 @@ a:hover {
     position: relative;
 }
 
+.registration-module > .registration-stepper-container,
+.registration-module > .registration-card {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    box-sizing: border-box;
+}
+
 .registration-overlay {
     position: fixed;
     inset: 0;
@@ -604,6 +694,9 @@ a:hover {
 }
 
 .registration-card {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     border-radius: var(--radius-lg);
     background-color: var(--white);
     border: 1px solid var(--gray-200);
@@ -871,6 +964,10 @@ a:hover {
     margin-bottom: var(--spacing-md);
 }
 
+.registration-hero .document-title {
+    margin-bottom: 0;
+}
+
 .document-subtitle {
     font-size: 1.25rem;
     color: var(--gray-300);
@@ -980,6 +1077,10 @@ a:hover {
     margin-top: var(--spacing-3xl);
 }
 
+.registration-main-content + .footer {
+    margin-top: 0;
+}
+
 .footer-content {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -1045,9 +1146,57 @@ a:hover {
 /* ===================================
    Responsive Design
    =================================== */
+
+/* Tablet and larger phones (768px and below) */
 @media (max-width: 768px) {
     :root {
         font-size: 14px;
+    }
+
+    /* Header changes */
+    .header {
+        background: linear-gradient(135deg, var(--gray-800) 0%, var(--gray-900) 100%);
+        border-bottom-color: var(--primary-color);
+    }
+
+    .nav-container {
+        padding: 0.4rem 0.65rem;
+    }
+
+    .desktop-header {
+        display: none;
+    }
+
+    .mobile-header {
+        display: flex;
+        gap: 0.35rem;
+    }
+
+    .document-hero {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    .registration-hero {
+        padding: var(--spacing-md) var(--spacing-md);
+    }
+
+    .document-title {
+        font-size: 1.5rem;
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .registration-hero .document-title {
+        margin-bottom: 0;
+    }
+
+    .document-subtitle {
+        font-size: 0.95rem;
+        margin-bottom: 0;
+    }
+
+    .document-date {
+        font-size: 0.75rem;
+        margin: 0;
     }
     
     .hero-kicker {
@@ -1086,14 +1235,20 @@ a:hover {
         gap: var(--spacing-xs);
     }
     
-    .nav-container {
-        flex-direction: column;
-        gap: var(--spacing-md);
-        padding: var(--spacing-md);
-    }
-    
     .section {
         padding: var(--spacing-xl) var(--spacing-sm);
+    }
+
+    .section.section-alt {
+        padding: var(--spacing-md) var(--spacing-sm);
+    }
+
+    .registration-hero + .section.section-alt {
+        padding-top: var(--spacing-xs);
+    }
+
+    .inscription-content {
+        max-width: 100%;
     }
     
     .content-grid {
@@ -1138,7 +1293,53 @@ a:hover {
     }
 }
 
+/* Small phones (480px and below) */
 @media (max-width: 480px) {
+    /* Header */
+    .mobile-header {
+        padding: 0.2rem 0;
+    }
+
+    .mobile-site-title {
+        font-size: 0.82rem;
+    }
+
+    .mobile-menu-toggle,
+    .mobile-header-spacer {
+        width: 34px;
+        height: 34px;
+    }
+
+    .document-hero {
+        padding: var(--spacing-md) var(--spacing-sm);
+    }
+
+    .registration-hero {
+        padding: var(--spacing-sm) var(--spacing-sm);
+    }
+
+    .document-title {
+        font-size: 1.25rem;
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .document-subtitle {
+        font-size: 0.85rem;
+        margin-bottom: 0;
+    }
+
+    .document-date {
+        font-size: 0.7rem;
+    }
+
+    .section.section-alt {
+        padding: var(--spacing-sm) var(--spacing-xs);
+    }
+
+    .registration-hero + .section.section-alt {
+        padding-top: 0.35rem;
+    }
+    
     .logo {
         height: 52px;
     }
@@ -1171,16 +1372,157 @@ a:hover {
         padding: var(--spacing-md);
     }
 
-    .registration-stepper {
-        grid-template-columns: 1fr;
+    /* Registration mobile improvements */
+    .registration-module {
+        padding: var(--spacing-md) 0;
+    }
+
+    .registration-stepper-container {
+        margin-bottom: var(--spacing-sm);
+        padding: var(--spacing-sm);
+    }
+
+    .stepper-progress {
+        margin-bottom: var(--spacing-xs);
     }
 
     .registration-card {
-        padding: 0.9rem;
+        padding: var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
     }
 
     .registration-panel-title {
         font-size: 1.3rem;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .registration-panel-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .registration-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+
+    .registration-field {
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .registration-label {
+        font-size: 0.85rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .registration-input {
+        padding: 0.65rem 0.7rem;
+        font-size: 0.9rem;
+    }
+
+    .registration-actions {
+        flex-direction: column-reverse;
+        gap: var(--spacing-sm);
+        margin-top: var(--spacing-md);
+    }
+
+    .button {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 0.95rem;
+    }
+
+    .registration-choice-group {
+        padding: 0.65rem;
+        margin: var(--spacing-sm) 0;
+    }
+
+    .registration-workshops-grid {
+        max-height: 12rem;
+    }
+
+    .registration-summary-strip {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.6rem;
+    }
+
+    .bank-card {
+        padding: var(--spacing-sm);
+        margin: var(--spacing-sm) 0;
+    }
+
+    .registration-consent-group {
+        margin-top: var(--spacing-sm);
+        padding-top: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    /* Extra small mobile registration */
+    .registration-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xs);
+    }
+
+    .registration-card {
+        padding: var(--spacing-sm);
+        border: none;
+        box-shadow: none;
+        background-color: var(--white);
+    }
+
+    .registration-panel-title {
+        font-size: 1.1rem;
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .registration-panel-subtitle {
+        font-size: 0.85rem;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .registration-label {
+        font-size: 0.8rem;
+    }
+
+    .registration-input {
+        padding: 0.55rem 0.6rem;
+        font-size: 0.85rem;
+        border-radius: var(--radius-sm);
+    }
+
+    .registration-input:focus {
+        box-shadow: 0 0 0 2px rgba(217, 28, 122, 0.2);
+    }
+
+    .button {
+        padding: 0.65rem 0.5rem;
+        font-size: 0.9rem;
+        border-radius: var(--radius-md);
+    }
+
+    .registration-error {
+        font-size: 0.75rem;
+        margin-top: 0.15rem;
+    }
+
+    .registration-helper-text {
+        font-size: 0.8rem;
+    }
+
+    .registration-workshop-option {
+        gap: 0.4rem;
+    }
+
+    .bank-card {
+        padding: 0.5rem;
+        margin: var(--spacing-xs) 0;
+    }
+
+    .bank-card p {
+        font-size: 0.85rem;
+        margin-bottom: 0.15rem;
     }
 }
 

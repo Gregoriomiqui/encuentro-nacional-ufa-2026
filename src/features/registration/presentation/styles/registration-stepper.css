@@ -1,0 +1,169 @@
+/* ===================================
+   Registration Stepper Styles
+   =================================== */
+
+.registration-stepper-container {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, rgba(217, 28, 122, 0.08) 0%, rgba(217, 28, 122, 0.04) 100%);
+  border-radius: var(--radius-lg);
+  padding: 0.45rem 0.55rem;
+  margin-bottom: var(--spacing-sm);
+  border: 1px solid rgba(217, 28, 122, 0.2);
+}
+
+.stepper-progress {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.22rem;
+}
+
+.step-indicator {
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: rgba(255, 255, 255, 0.6);
+  padding: 0.2rem 0.42rem;
+  border-radius: var(--radius-md);
+}
+
+.stepper-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
+  gap: 0.3rem;
+  padding-top: 0.18rem;
+  overflow: visible;
+  align-items: center;
+  justify-items: center;
+}
+
+.stepper-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.16rem;
+  text-align: center;
+}
+
+.stepper-badge {
+  width: 36px;
+  height: 36px;
+  position: relative;
+  border-radius: 50%;
+  background-color: var(--gray-200);
+  color: var(--gray-600);
+  font-weight: var(--font-weight-bold);
+  font-size: 0.86rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+  border: 2px solid transparent;
+}
+
+.stepper-item.active .stepper-badge {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+  color: var(--white);
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 2px rgba(217, 28, 122, 0.22), 0 4px 12px rgba(217, 28, 122, 0.26);
+  transform: none;
+}
+
+.stepper-item.completed .stepper-badge {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border-color: var(--primary-dark);
+}
+
+.check-mark {
+  display: inline-block;
+  font-size: 1.1rem;
+}
+
+.stepper-label {
+  font-size: 0.62rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--gray-600);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+
+.stepper-item.active .stepper-label {
+  color: var(--primary-color);
+  font-weight: var(--font-weight-bold);
+}
+
+.stepper-item.completed .stepper-label {
+  color: var(--gray-700);
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .registration-stepper-container {
+    padding: 0.38rem 0.45rem;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .stepper-steps {
+    grid-template-columns: repeat(auto-fit, minmax(68px, 1fr));
+    gap: 0.28rem;
+    justify-items: center;
+  }
+
+  .stepper-item {
+    min-width: 0;
+  }
+
+  .stepper-badge {
+    width: 34px;
+    height: 34px;
+    font-size: 0.8rem;
+  }
+
+  .stepper-item.active .stepper-badge {
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .registration-stepper-container {
+    padding: 0.32rem 0.36rem;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .step-indicator {
+    font-size: 0.68rem;
+    padding: 0.16rem 0.34rem;
+  }
+
+  .stepper-steps {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: visible;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    gap: 0.22rem;
+    padding-top: 0.16rem;
+    padding-bottom: 0.12rem;
+    justify-content: center;
+  }
+
+  .stepper-item {
+    min-width: 52px;
+    flex: 0 0 auto;
+  }
+
+  .stepper-badge {
+    width: 30px;
+    height: 30px;
+    font-size: 0.74rem;
+  }
+
+  .stepper-label {
+    font-size: 0.54rem;
+  }
+}
