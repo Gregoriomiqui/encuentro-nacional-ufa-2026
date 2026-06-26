@@ -1,12 +1,60 @@
 import { useEffect, type PropsWithChildren } from 'react'
 import { Toaster } from 'react-hot-toast'
+import { useInRouterContext, useLocation } from 'react-router-dom'
 
-export function AppProviders({ children }: PropsWithChildren) {
+function RouterLocationEffects() {
+  const location = useLocation()
+
+  useEffect(() => {
+    if (location.hash) {
+      return
+    }
+
+    globalThis.window.scrollTo({ top: 0, behavior: 'auto' })
+  }, [location.pathname, location.hash])
+
+  useEffect(() => {
+    if (!location.hash) {
+      return
+    }
+
+    const elementId = decodeURIComponent(location.hash.slice(1))
+
+    const scrollToHashTarget = () => {
+      const target = document.getElementById(elementId)
+
+      if (!target) {
+        return false
+      }
+
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return true
+    }
+
+    if (scrollToHashTarget()) {
+      return
+    }
+
+    const timer = globalThis.window.setTimeout(() => {
+      scrollToHashTarget()
+    }, 120)
+
+    return () => {
+      globalThis.window.clearTimeout(timer)
+    }
+  }, [location.hash, location.pathname])
+
+  return null
+}
+
+export function AppProviders({ children }: Readonly<PropsWithChildren>) {
+  const hasRouterContext = useInRouterContext()
+
   useEffect(() => {
     const links = document.querySelectorAll<HTMLAnchorElement>('a[href^="http"]')
 
     links.forEach((link) => {
-      if (!link.href.includes(window.location.hostname)) {
+      if (!link.href.includes(globalThis.window.location.hostname)) {
         link.target = '_blank'
         link.rel = 'noopener noreferrer'
       }
@@ -18,7 +66,7 @@ export function AppProviders({ children }: PropsWithChildren) {
       '.card, .legal-section, .hero-content, .inscription-content, .contact-info',
     )
 
-    if (!('IntersectionObserver' in window)) {
+    if (!('IntersectionObserver' in globalThis.window)) {
       elements.forEach((element) => {
         element.style.opacity = '1'
         element.style.transform = 'translateY(0)'
@@ -58,6 +106,7 @@ export function AppProviders({ children }: PropsWithChildren) {
 
   return (
     <>
+      {hasRouterContext ? <RouterLocationEffects /> : null}
       {children}
       <Toaster
         position="top-right"

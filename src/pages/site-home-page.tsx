@@ -5,18 +5,20 @@ export function SiteHomePage() {
     <main className="main-content">
       <section className="hero">
         <div className="hero-content">
-          <p className="hero-kicker">Encuentro Nacional</p>
+          <p className="hero-kicker">Encuentro Nacional 2026</p>
           <h2 className="hero-title">
             Mujeres
             <br />
             Transformadas
           </h2>
-          <p className="hero-subtitle">Union Femenina Aliancista · Alianza Cristiana y Misionera</p>
+          <p className="hero-subtitle">Union Femenina Aliancista</p>
           <p className="hero-description">"La semilla que cayo en buen terreno"</p>
           <p className="hero-verse">Mateo 13:23 NVI</p>
-          <a href="#inscripcion" className="cta-button cta-button-soft">
-            Inscribete Ahora
-          </a>
+          <div className="hero-cta-row">
+            <a href="#inscripcion" className="cta-button cta-button-soft">
+              Inscribete Ahora
+            </a>
+          </div>
         </div>
         <div className="hero-bottom-strip" aria-label="Informacion principal del evento">
           <p className="hero-bottom-item">
@@ -43,7 +45,7 @@ export function SiteHomePage() {
             </article>
             <article className="card">
               <h3 className="card-title">Participantes</h3>
-              <p className="card-text">Mujeres de todas las iglesias de la Alianza en Chile</p>
+              <p className="card-text">Mujeres de todas las iglesias de la Alianza Cristiana y Misionera en Chile</p>
             </article>
           </div>
         </div>
