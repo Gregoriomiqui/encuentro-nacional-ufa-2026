@@ -4,6 +4,7 @@ import type {
   RegistrationRegistrant,
   RegistrationPayload,
 } from '@features/registration/domain/entities/registration'
+import { RegistrationDietType } from '@features/registration/domain/entities/registration'
 import { sendRegistration, type MakeRegistrationResponse } from '@features/registration/infrastructure/repositories/make-registration.repository'
 
 export type SubmitRegistrationResult = {
@@ -12,7 +13,7 @@ export type SubmitRegistrationResult = {
 }
 
 function toRegistrantDietType(dietType: RegistrationFormRegistrant['dietType']): RegistrationRegistrant['diet_type'] {
-  if (dietType === 'traditional' || dietType === 'vegetarian') {
+  if (dietType === RegistrationDietType.Traditional || dietType === RegistrationDietType.Vegetarian) {
     return dietType
   }
 
@@ -29,6 +30,7 @@ export async function submitRegistration(
       mime_type: values.receiptMimeType,
       filename: values.receiptFileName,
     },
+    district_name: values.districtName,
     church_origin: values.churchOrigin,
     accepts_terms: values.acceptsTerms,
     accepts_image_authorization: values.acceptsImageAuthorization,
