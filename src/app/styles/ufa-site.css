@@ -311,7 +311,7 @@ a:hover {
 .hero-content {
     position: relative;
     z-index: 1;
-    max-width: 800px;
+    max-width: 920px;
     margin: 0 auto;
     animation: hero-fade-in 900ms ease-out;
 }
@@ -329,11 +329,23 @@ a:hover {
     font-size: clamp(3.1rem, 9vw, 6.4rem);
     font-weight: 700;
     margin-bottom: var(--spacing-sm);
+    text-align: center;
     line-height: 0.86;
     letter-spacing: 0.015em;
     text-transform: uppercase;
     color: var(--white);
     text-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.hero-title-line {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.hero-title-line-bottom {
+    font-size: 0.88em;
+    letter-spacing: 0.01em;
 }
 
 .hero-subtitle {
