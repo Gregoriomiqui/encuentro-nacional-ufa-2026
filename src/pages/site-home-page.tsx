@@ -7,9 +7,8 @@ export function SiteHomePage() {
         <div className="hero-content">
           <p className="hero-kicker">Encuentro Nacional 2026</p>
           <h2 className="hero-title">
-            Mujeres
-            <br />
-            Transformadas
+            <span className="hero-title-line hero-title-line-top">Mujeres</span>
+            <span className="hero-title-line hero-title-line-bottom">Transformadas</span>
           </h2>
           <p className="hero-subtitle">Union Femenina Aliancista</p>
           <p className="hero-description">"La semilla que cayo en buen terreno"</p>

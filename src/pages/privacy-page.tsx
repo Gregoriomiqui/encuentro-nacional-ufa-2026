@@ -7,7 +7,7 @@ export function PrivacyPage() {
         <div className="container">
           <h1 className="document-title">Política de Privacidad</h1>
           <p className="document-subtitle">Registro de Eventos - Encuentro Nacional UFA "Mujeres Transformadas"</p>
-          <p className="document-date">Última actualización: Mayo 2026</p>
+          <p className="document-date">Última actualización: Julio 2026</p>
         </div>
       </section>
 
@@ -33,7 +33,7 @@ export function PrivacyPage() {
               <p className="legal-text">El responsable del tratamiento de sus datos personales es:</p>
               <div className="info-box">
                 <p>
-                  <strong>Organización:</strong> UFA ACYM Chile (Unión Femenina Aliancista de la Alianza Cristiana y
+                  <strong>Organización:</strong> UFAACYM Chile (Unión Femenina Aliancista de la Alianza Cristiana y
                   Misionera - Chile)
                 </p>
                 <p>
@@ -51,37 +51,19 @@ export function PrivacyPage() {
               <ul className="legal-list">
                 <li>Nombre completo</li>
                 <li>Número de documento de identidad (RUT)</li>
-                <li>Fecha de nacimiento</li>
-                <li>Fotografía (si es proporcionada)</li>
+                <li>Rango etario</li>
               </ul>
 
               <h3 className="legal-subheading">3.2 Datos de Contacto</h3>
               <ul className="legal-list">
                 <li>Dirección de correo electrónico</li>
                 <li>Número de teléfono móvil</li>
-                <li>Dirección postal</li>
                 <li>Iglesia local a la que pertenece</li>
               </ul>
 
-              <h3 className="legal-subheading">3.3 Datos de Salud (Información Sensible)</h3>
+              <h3 className="legal-subheading">3.3 Datos de Pago</h3>
               <ul className="legal-list">
-                <li>Alergias alimentarias</li>
-                <li>Condiciones médicas relevantes</li>
-                <li>Medicamentos que toma regularmente</li>
-                <li>Necesidades especiales de accesibilidad</li>
-              </ul>
-
-              <h3 className="legal-subheading">3.4 Datos de Contacto de Emergencia</h3>
-              <ul className="legal-list">
-                <li>Nombre del contacto de emergencia</li>
-                <li>Relación con la participante</li>
-                <li>Número de teléfono de emergencia</li>
-              </ul>
-
-              <h3 className="legal-subheading">3.5 Datos de Pago</h3>
-              <ul className="legal-list">
-                <li>Información de transacciones (no almacenamos datos de tarjetas de crédito)</li>
-                <li>Comprobantes de pago</li>
+                <li>Comprobantes de transferencia bancaria de su inscripción</li>
               </ul>
             </section>
 
@@ -93,19 +75,15 @@ export function PrivacyPage() {
                   <strong>Gestión de inscripciones:</strong> Procesar y confirmar su inscripción al evento
                 </li>
                 <li>
-                  <strong>Comunicación:</strong> Enviar información relevante sobre el retiro, cambios en el programa,
+                  <strong>Comunicación:</strong> Enviar información relevante sobre el Encuentro, cambios en el programa,
                   recordatorios y confirmaciones
                 </li>
                 <li>
-                  <strong>Logística:</strong> Organizar alojamiento, alimentación (considerando alergias y necesidades
-                  especiales) y transporte si aplica
+                  <strong>Logística:</strong> Organizar la distribución de los espacios para el desarrollo de las
+                  actividades
                 </li>
                 <li>
-                  <strong>Salud y seguridad:</strong> Atender emergencias médicas y garantizar el bienestar de las
-                  participantes
-                </li>
-                <li>
-                  <strong>Administración:</strong> Gestionar pagos y emitir documentación relacionada
+                  <strong>Administración:</strong> Registro y respaldo de las participantes
                 </li>
                 <li>
                   <strong>Mejora de servicios:</strong> Evaluar y mejorar la organización de futuros eventos
@@ -121,17 +99,20 @@ export function PrivacyPage() {
               <p className="legal-text">El tratamiento de sus datos personales se basa en:</p>
               <ul className="legal-list">
                 <li>
-                  <strong>Consentimiento:</strong> Usted proporciona voluntariamente sus datos al inscribirse
+                  <strong>Consentimiento:</strong> Otorgado de manera libre, expresa e informada al momento de la
+                  inscripción
                 </li>
                 <li>
-                  <strong>Ejecución de contrato:</strong> Necesario para la prestación del servicio de organización del
-                  evento
+                  <strong>Ejecución de la inscripción al evento:</strong> Necesario para gestionar la participación,
+                  organización y desarrollo del Encuentro Nacional
                 </li>
                 <li>
-                  <strong>Interés legítimo:</strong> Garantizar la seguridad y bienestar de las participantes
+                  <strong>Obligación legal:</strong> Cumplimiento de normativas fiscales y legales según normativas
+                  vigentes
                 </li>
                 <li>
-                  <strong>Obligación legal:</strong> Cumplimiento de normativas fiscales y legales
+                  <strong>Seguridad y bienestar de las participantes:</strong> Tratamiento de datos estrictamente
+                  necesarios para la adopción de medidas de resguardo durante la realización del evento
                 </li>
               </ul>
             </section>
@@ -141,10 +122,6 @@ export function PrivacyPage() {
               <h3 className="legal-subheading">6.1 Con Terceros</h3>
               <p className="legal-text">Sus datos pueden ser compartidos únicamente con:</p>
               <ul className="legal-list">
-                <li>
-                  <strong>Proveedores de servicios:</strong> Hoteles, centros de retiro, servicios de catering (solo
-                  información necesaria para la prestación del servicio)
-                </li>
                 <li>
                   <strong>Personal autorizado:</strong> Equipo organizador y personal médico de emergencia (solo en
                   caso necesario)
@@ -171,12 +148,8 @@ export function PrivacyPage() {
                 <li>Uso de conexiones seguras (HTTPS) para la transmisión de datos</li>
                 <li>Almacenamiento en sistemas protegidos con contraseña</li>
                 <li>Respaldo regular de la información</li>
-                <li>Destrucción segura de datos cuando ya no son necesarios</li>
+                <li>Eliminación segura de datos cuando ya no son necesarios</li>
               </ul>
-              <p className="legal-text">
-                Los datos sensibles de salud son manejados con especial cuidado y solo son accesibles al personal que
-                estrictamente lo necesita.
-              </p>
             </section>
 
             <section className="legal-section">
@@ -186,13 +159,6 @@ export function PrivacyPage() {
                 <li>
                   <strong>Datos de inscripción:</strong> Durante el evento y hasta 1 año después para fines
                   administrativos y de mejora
-                </li>
-                <li>
-                  <strong>Datos de pago:</strong> Según lo requiera la legislación fiscal chilena (generalmente 6 años)
-                </li>
-                <li>
-                  <strong>Datos de salud:</strong> Se eliminarán 30 días después de finalizado el evento, salvo que
-                  sean necesarios para documentar un incidente
                 </li>
                 <li>
                   <strong>Fotografías y videos:</strong> Se conservarán indefinidamente para fines de registro histórico
@@ -227,8 +193,8 @@ export function PrivacyPage() {
                 </li>
               </ul>
               <p className="legal-text">
-                Para ejercer estos derechos, puede contactarse a través de su iglesia local o mediante los canales de
-                comunicación proporcionados durante la inscripción.
+                Para ejercer estos derechos, puede contactarse directamente con la Unión Femenina Aliancista a través de
+                sus canales oficiales.
               </p>
             </section>
 
@@ -270,7 +236,6 @@ export function PrivacyPage() {
                 contactarnos a través de:
               </p>
               <ul className="legal-list">
-                <li>Su iglesia local de la Alianza Cristiana y Misionera</li>
                 <li>Los canales oficiales de comunicación del evento</li>
                 <li>El equipo organizador del Encuentro Nacional UFA "Mujeres Transformadas"</li>
               </ul>
@@ -293,7 +258,6 @@ export function PrivacyPage() {
               <ul className="legal-list">
                 <li>Ha leído y comprendido esta Política de Privacidad</li>
                 <li>Consiente el tratamiento de sus datos personales según lo descrito</li>
-                <li>Autoriza el tratamiento de datos sensibles (salud) para los fines especificados</li>
                 <li>La información proporcionada es veraz y exacta</li>
               </ul>
             </section>
