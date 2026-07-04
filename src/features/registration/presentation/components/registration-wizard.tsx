@@ -8,8 +8,10 @@ import imageCompression from 'browser-image-compression'
 import {
   MAX_COMPANIONS,
   REGISTRATION_FEE_CLP,
+  RegistrationDietType,
   type RegistrationFormRegistrant,
   type RegistrationFormValues,
+  type WorkshopOption,
 } from '@features/registration/domain/entities/registration'
 import {
   DISTRICT_NAMES,
@@ -17,6 +19,7 @@ import {
   isChurchInDistrict,
 } from '@features/registration/domain/entities/church-directory'
 import { submitRegistration } from '@features/registration/application/use-cases/submit-registration.use-case'
+import { fetchWorkshopOptions } from '@features/registration/infrastructure/repositories/make-registration.repository'
 import { RegistrationStepper } from './registration-stepper'
 import { RegistrationWelcome } from './registration-welcome'
 
@@ -39,37 +42,8 @@ const POPULAR_EMAIL_DOMAINS = [
 ] as const
 
 const DIET_OPTIONS = [
-  { value: 'traditional', label: 'Alimentación tradicional' },
-  { value: 'vegetarian', label: 'Alimentación vegetariana' },
-] as const
-
-const WORKSHOP_OPTIONS = [
-  'Huellas de Fe: El legado de las mujeres en el Antiguo y Nuevo Testamento.',
-  'Administradoras, transformadas e influyentes',
-  'Transformadas para conectar: El arte de ver al prójimo con el Corazón',
-  'Mujeres y Sociedad: Siendo Luz en medio del Mundo',
-  'Maternidad: cuidando el corazón mientras cuidas de otros.',
-  'Acompañando a los adultos mayores, transformando el ambiente para que todos podamos participar.',
-  'Las voces que habitan nuestro interior: Aprendiendo a reconocer la voz de la gracia en medio de la crítica y la autoexigencia.',
-  'Puentes, no muros',
-  'Más que un Trabajo: Un Propósito en Cristo',
-  'La comunicación que transforma',
-  'Transformando cicatrices en un legado de esperanza',
-  'Mujer y cristiana',
-  'Transformadas para una misión',
-  'La mesa de los olvidados. Creados para la gloria de Dios',
-  'Misión, santidad y discernimiento en una era digital',
-  'La soledad, enemiga o aliada',
-  'Transformadas para reflejar a Cristo en un mundo de exposición',
-  'Mujer, adicciones, el camino a la sanidad y transformación.',
-  '¡Cuando el corazón se agita, El permanece firme!',
-  'Transformadas por la Verdad: El poder de la Palabra de Dios para renovar la vida de la mujer.',
-  'Del hogar a la sociedad: mujeres que viven y reflejan el evangelio.',
-  'Evangelio y Neurodivergencia: Comprendiendo el reino de Dios frente a la neurodiversidad.',
-  'Quién dices que soy',
-  'Nuestra identidad por Gracia',
-  'Contención emocional y espiritual para la mujer maltratada',
-  'Comunicación efectiva y resolución de conflictos: claves para relaciones transformadoras',
+  { value: RegistrationDietType.Traditional, label: 'Alimentación tradicional' },
+  { value: RegistrationDietType.Vegetarian, label: 'Alimentación vegetariana' },
 ] as const
 
 const BANK_INFO = {
@@ -580,9 +554,18 @@ type ParticipantStepProps = {
   participantIndex: number
   currentStep: number
   showErrors: boolean
+  workshopOptions: WorkshopOption[]
+  workshopsLoading: boolean
 }
 
-function ParticipantStepPanel({ formik, participantIndex, currentStep, showErrors }: Readonly<ParticipantStepProps>) {
+function ParticipantStepPanel({
+  formik,
+  participantIndex,
+  currentStep,
+  showErrors,
+  workshopOptions,
+  workshopsLoading,
+}: Readonly<ParticipantStepProps>) {
   const participantErrors = formik.errors.registrants?.[participantIndex] as
     | Partial<Record<keyof RegistrationFormRegistrant, string>>
     | undefined
@@ -590,15 +573,19 @@ function ParticipantStepPanel({ formik, participantIndex, currentStep, showError
   const emailSuggestions = buildEmailSuggestions(formik.values.registrants[participantIndex]?.email ?? '')
   const emailSuggestionsListId = `registrants.${participantIndex}.email-suggestions`
 
-  function toggleWorkshopSelection(workshopName: string) {
+  function toggleWorkshopSelection(workshopId: string) {
     const currentSelection = formik.values.registrants[participantIndex]?.workshops ?? []
-    const hasWorkshop = currentSelection.includes(workshopName)
+    const hasWorkshop = currentSelection.includes(workshopId)
 
-    const nextSelection = hasWorkshop
-      ? currentSelection.filter((workshop) => workshop !== workshopName)
-      : currentSelection.length < 2
-        ? [...currentSelection, workshopName]
-        : currentSelection
+    let nextSelection: string[]
+
+    if (hasWorkshop) {
+      nextSelection = currentSelection.filter((id) => id !== workshopId)
+    } else if (currentSelection.length < 2) {
+      nextSelection = [...currentSelection, workshopId]
+    } else {
+      nextSelection = currentSelection
+    }
 
     formik.setFieldValue(`registrants.${participantIndex}.workshops`, nextSelection, true)
   }
@@ -809,29 +796,41 @@ function ParticipantStepPanel({ formik, participantIndex, currentStep, showError
           <legend className="registration-label">Selecciona uno o dos talleres de tu interés</legend>
           <p className="registration-helper-text">Debes elegir entre 1 y 2 talleres para esta participante.</p>
           <div className="registration-workshops-grid" role="group" aria-label="Listado de talleres disponibles">
-            {WORKSHOP_OPTIONS.map((workshopName, workshopIndex) => {
-              const selectedWorkshops = formik.values.registrants[participantIndex]?.workshops ?? []
-              const isSelected = selectedWorkshops.includes(workshopName)
-              const disableOption = !isSelected && selectedWorkshops.length >= 2
+            {workshopsLoading
+              ? Array.from({ length: 4 }, (_, index) => (
+                  <div key={`workshop-skeleton-${index + 1}`} className="registration-workshop-skeleton" aria-hidden="true" />
+                ))
+              : null}
 
-              return (
-                <label key={workshopName} className={`registration-workshop-option ${disableOption ? 'is-disabled' : ''}`} htmlFor={`registrants.${participantIndex}.workshops.${workshopIndex}`}>
-                  <input
-                    id={`registrants.${participantIndex}.workshops.${workshopIndex}`}
-                    type="checkbox"
-                    checked={isSelected}
-                    onChange={() => {
-                      toggleWorkshopSelection(workshopName)
-                    }}
-                    onBlur={() => {
-                      formik.setFieldTouched(`registrants.${participantIndex}.workshops`, true, true)
-                    }}
-                    disabled={disableOption}
-                  />
-                  <span>{workshopName}</span>
-                </label>
-              )
-            })}
+            {!workshopsLoading && workshopOptions.length === 0 ? (
+              <p className="registration-workshops-empty">No hay cupos para talleres</p>
+            ) : null}
+
+            {!workshopsLoading
+              ? workshopOptions.map((workshopOption, workshopIndex) => {
+                  const selectedWorkshops = formik.values.registrants[participantIndex]?.workshops ?? []
+                  const isSelected = selectedWorkshops.includes(workshopOption.id)
+                  const disableOption = !isSelected && selectedWorkshops.length >= 2
+
+                  return (
+                    <label key={workshopOption.id} className={`registration-workshop-option ${disableOption ? 'is-disabled' : ''}`} htmlFor={`registrants.${participantIndex}.workshops.${workshopIndex}`}>
+                      <input
+                        id={`registrants.${participantIndex}.workshops.${workshopIndex}`}
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => {
+                          toggleWorkshopSelection(workshopOption.id)
+                        }}
+                        onBlur={() => {
+                          formik.setFieldTouched(`registrants.${participantIndex}.workshops`, true, true)
+                        }}
+                        disabled={disableOption}
+                      />
+                      <span>{workshopOption.workshop}</span>
+                    </label>
+                  )
+                })
+              : null}
           </div>
           <p className="registration-selection-counter">
             Seleccionados: {(formik.values.registrants[participantIndex]?.workshops ?? []).length}/2
@@ -946,6 +945,8 @@ export function RegistrationWizard() {
   const [currentStep, setCurrentStep] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [attemptedSteps, setAttemptedSteps] = useState<Record<number, boolean>>({})
+  const [workshopOptions, setWorkshopOptions] = useState<WorkshopOption[]>([])
+  const [workshopsRequestState, setWorkshopsRequestState] = useState<'loading' | 'loaded' | 'error'>('loading')
 
   const initialValues = useMemo<RegistrationFormValues>(
     () => ({
@@ -992,6 +993,37 @@ export function RegistrationWizard() {
   const handleReceiptChange = createReceiptChangeHandler(formik)
   const showParticipantErrors = Boolean(attemptedSteps[currentStep])
 
+  useEffect(() => {
+    if (!isParticipantStep || workshopsRequestState !== 'loading') {
+      return
+    }
+
+    let isMounted = true
+
+    fetchWorkshopOptions()
+      .then((options) => {
+        if (!isMounted) {
+          return
+        }
+
+        const enabledOptions = options.filter((option) => option.isEnabled)
+        setWorkshopOptions(enabledOptions)
+        setWorkshopsRequestState('loaded')
+      })
+      .catch(() => {
+        if (!isMounted) {
+          return
+        }
+
+        setWorkshopOptions([])
+        setWorkshopsRequestState('error')
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [isParticipantStep, workshopsRequestState])
+
   // Auto-scroll to first input on step change in mobile
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -1023,6 +1055,8 @@ export function RegistrationWizard() {
         participantIndex={participantIndex}
         currentStep={currentStep}
         showErrors={showParticipantErrors}
+        workshopOptions={workshopOptions}
+        workshopsLoading={workshopsRequestState === 'loading'}
       />
     )
   }

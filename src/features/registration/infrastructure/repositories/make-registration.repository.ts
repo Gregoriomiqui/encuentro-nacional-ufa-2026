@@ -1,5 +1,8 @@
 import { env } from '@shared/config/env'
-import type { RegistrationPayload } from '@features/registration/domain/entities/registration'
+import type { RegistrationPayload, WorkshopOption } from '@features/registration/domain/entities/registration'
+
+const MAKE_REGISTRATION_PATH = '/ycww8er2htyap4dikfsqdk6xwy9o5ut6'
+const MAKE_WORKSHOPS_PATH = '/y5dyby9m30ni4v622lciw7snc03b35ng'
 
 export type MakeRegistrationResponse = {
   success: boolean
@@ -15,12 +18,66 @@ export class RegistrationApiError extends Error {
   }
 }
 
+function normalizeWorkshopOption(raw: unknown): WorkshopOption | null {
+  if (!raw || typeof raw !== 'object') {
+    return null
+  }
+
+  const candidate = raw as Record<string, unknown>
+  const id = candidate.id
+  const workshop = candidate.workshop
+  const countRegistered = candidate.countRegistered
+  const isEnabled = candidate.isEnabled
+
+  if (
+    typeof id !== 'string' ||
+    typeof workshop !== 'string' ||
+    typeof countRegistered !== 'number' ||
+    typeof isEnabled !== 'boolean'
+  ) {
+    return null
+  }
+
+  return {
+    id,
+    workshop,
+    countRegistered,
+    isEnabled,
+  }
+}
+
+export async function fetchWorkshopOptions(): Promise<WorkshopOption[]> {
+  if (!env.makeWebhookUrl || !env.makeWebhookApiKey) {
+    throw new Error('Faltan variables de entorno para obtener talleres (VITE_MAKE_WEBHOOK_URL y VITE_MAKE_API_KEY).')
+  }
+
+  const response = await fetch(`${env.makeWebhookUrl}${MAKE_WORKSHOPS_PATH}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-make-apikey': env.makeWebhookApiKey,
+    },
+  })
+
+  if (!response.ok) {
+    throw new RegistrationApiError(response.status, 'No se pudo obtener la lista de talleres.')
+  }
+
+  const data: unknown = await response.json()
+
+  if (!Array.isArray(data)) {
+    throw new TypeError('Formato de talleres invalido. Se esperaba un arreglo.')
+  }
+
+  return data.map(normalizeWorkshopOption).filter((option): option is WorkshopOption => option !== null)
+}
+
 export async function sendRegistration(payload: RegistrationPayload): Promise<MakeRegistrationResponse> {
   if (!env.makeWebhookUrl || !env.makeWebhookApiKey) {
     throw new Error('Faltan variables de entorno para enviar la inscripción (VITE_MAKE_WEBHOOK_URL y VITE_MAKE_API_KEY).')
   }
 
-  const response = await fetch(env.makeWebhookUrl, {
+  const response = await fetch(`${env.makeWebhookUrl}${MAKE_REGISTRATION_PATH}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

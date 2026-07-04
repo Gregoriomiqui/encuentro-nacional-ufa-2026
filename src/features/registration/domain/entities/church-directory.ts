@@ -19,7 +19,7 @@ export const DISTRICT_CHURCHES: DistrictChurchDirectory[] = [
     ],
   },
   {
-    name: 'Distrito Metropolitano (Santiago)',
+    name: 'Distrito Metropolitano',
     churches_and_congregations: [
       'Valparaíso',
       'Viña del Mar',
