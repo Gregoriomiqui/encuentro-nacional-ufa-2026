@@ -941,9 +941,32 @@ function PaymentStepPanel({ formik, totalAmount, onReceiptChange }: Readonly<Pay
   )
 }
 
+type SuccessStepPanelProps = {
+  redirectCountdownSeconds: number
+}
+
+function SuccessStepPanel({ redirectCountdownSeconds }: Readonly<SuccessStepPanelProps>) {
+  return (
+    <section className="registration-success-panel" aria-live="polite" aria-labelledby="registration-success-title">
+      <span className="registration-success-badge">Inscripción completada</span>
+      <h3 id="registration-success-title" className="registration-success-title">
+        ¡Registro exitoso!
+      </h3>
+      <p className="registration-success-text">
+        Hemos recibido tu inscripción correctamente.
+      </p>
+      <p className="registration-success-text">
+        En {redirectCountdownSeconds} segundos volverás al inicio del módulo de inscripción.
+      </p>
+    </section>
+  )
+}
+
 export function RegistrationWizard() {
   const [currentStep, setCurrentStep] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
+  const [isSuccessScreenVisible, setIsSuccessScreenVisible] = useState(false)
+  const [redirectCountdownSeconds, setRedirectCountdownSeconds] = useState(10)
   const [attemptedSteps, setAttemptedSteps] = useState<Record<number, boolean>>({})
   const [workshopOptions, setWorkshopOptions] = useState<WorkshopOption[]>([])
   const [workshopsRequestState, setWorkshopsRequestState] = useState<'loading' | 'loaded' | 'error'>('loading')
@@ -974,9 +997,10 @@ export function RegistrationWizard() {
         const totalParticipants = getSafeCompanionCount(values.companionCount) + 1
         const result = await submitRegistration(values, totalParticipants)
         toast.success(result.apiResponse.message)
+        setIsSuccessScreenVisible(true)
+        setRedirectCountdownSeconds(10)
         helpers.resetForm({ values: initialValues })
         setAttemptedSteps({})
-        setCurrentStep(0)
       } catch (error) {
         toast.error(error instanceof Error ? error.message : 'Ocurrió un error inesperado al enviar la inscripción.')
       } finally {
@@ -1023,6 +1047,36 @@ export function RegistrationWizard() {
       isMounted = false
     }
   }, [isParticipantStep, workshopsRequestState])
+
+  useEffect(() => {
+    if (!isSuccessScreenVisible) {
+      return
+    }
+
+    globalThis.window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [isSuccessScreenVisible])
+
+  useEffect(() => {
+    if (!isSuccessScreenVisible) {
+      return
+    }
+
+    const timer = globalThis.window.setTimeout(() => {
+      setRedirectCountdownSeconds((previous) => {
+        if (previous <= 1) {
+          setCurrentStep(0)
+          setIsSuccessScreenVisible(false)
+          return 10
+        }
+
+        return previous - 1
+      })
+    }, 1000)
+
+    return () => {
+      globalThis.window.clearTimeout(timer)
+    }
+  }, [isSuccessScreenVisible, redirectCountdownSeconds])
 
   // Auto-scroll to first input on step change in mobile
   useEffect(() => {
@@ -1072,43 +1126,50 @@ export function RegistrationWizard() {
           </div>
         </div>
       )}
-      
-      <RegistrationStepper currentStep={currentStep + 1} totalSteps={finalStep + 1} />
 
-      {currentStep === 0 && <RegistrationWelcome />}
+        {isSuccessScreenVisible ? (
+          <div className="registration-card">
+            <SuccessStepPanel redirectCountdownSeconds={redirectCountdownSeconds} />
+          </div>
+        ) : (
+          <>
+            <RegistrationStepper currentStep={currentStep + 1} totalSteps={finalStep + 1} />
 
-      <form className="registration-card" onSubmit={formik.handleSubmit} noValidate>
-        {currentPanel}
+            {currentStep === 0 && <RegistrationWelcome />}
 
-        <div className="registration-actions">
-          <button
-            type="button"
-            className="button button-secondary"
-            onClick={() => {
-              retreatStep(setCurrentStep)
-            }}
-            disabled={currentStep === 0 || formik.isSubmitting}
-          >
-            Anterior
-          </button>
+            <form className="registration-card" onSubmit={formik.handleSubmit} noValidate>
+              {currentPanel}
 
-          {currentStep < finalStep ? (
-            <button
-              type="button"
-              className="button button-primary"
-              onClick={() => advanceStep(formik, currentStep, totalParticipants, finalStep, setAttemptedSteps, setCurrentStep)}
-              disabled={formik.isSubmitting}
-            >
-              Siguiente
-            </button>
-          ) : (
-            <button type="submit" className="button button-primary" disabled={formik.isSubmitting}>
-              {formik.isSubmitting ? 'Enviando...' : 'Enviar inscripción'}
-            </button>
-          )}
-        </div>
+              <div className="registration-actions">
+                <button
+                  type="button"
+                  className="button button-secondary"
+                  onClick={() => {
+                    retreatStep(setCurrentStep)
+                  }}
+                  disabled={currentStep === 0 || formik.isSubmitting}
+                >
+                  Anterior
+                </button>
 
-      </form>
+                {currentStep < finalStep ? (
+                  <button
+                    type="button"
+                    className="button button-primary"
+                    onClick={() => advanceStep(formik, currentStep, totalParticipants, finalStep, setAttemptedSteps, setCurrentStep)}
+                    disabled={formik.isSubmitting}
+                  >
+                    Siguiente
+                  </button>
+                ) : (
+                  <button type="submit" className="button button-primary" disabled={formik.isSubmitting}>
+                    {formik.isSubmitting ? 'Enviando...' : 'Enviar inscripción'}
+                  </button>
+                )}
+              </div>
+            </form>
+          </>
+        )}
 
 
     </div>
