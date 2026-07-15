@@ -11,7 +11,7 @@ import {
   RegistrationDietType,
   type RegistrationFormRegistrant,
   type RegistrationFormValues,
-  type WorkshopOption,
+  type WorkshopsBySchedule,
 } from '@features/registration/domain/entities/registration'
 import {
   DISTRICT_NAMES,
@@ -69,7 +69,8 @@ function createEmptyRegistrant(): RegistrationFormRegistrant {
     age: '',
     dietType: '',
     needsAccommodation: false,
-    workshops: [],
+    workshopAm: '',
+    workshopPm: '',
     phone: '',
     email: '',
   }
@@ -201,7 +202,7 @@ function isValidRut(rut: string): boolean {
   return getRutVerifierDigit(rutBody) === providedVerifier
 }
 
-function getParticipantStepErrors(registrant: RegistrationFormRegistrant) {
+function getParticipantStepErrors(registrant: RegistrationFormRegistrant, workshopsBySchedule: WorkshopsBySchedule) {
   const errors: Partial<Record<keyof RegistrationFormRegistrant, string>> = {}
 
   const rut = registrant.rut.trim()
@@ -239,8 +240,18 @@ function getParticipantStepErrors(registrant: RegistrationFormRegistrant) {
     errors.dietType = 'Debes seleccionar un tipo de alimentación.'
   }
 
-  if (registrant.workshops.length < 1 || registrant.workshops.length > 2) {
-    errors.workshops = 'Debes seleccionar entre 1 y 2 talleres.'
+  if (!registrant.workshopAm) {
+    errors.workshopAm = 'Debes seleccionar un taller de la mañana.'
+  }
+
+  if (!registrant.workshopPm) {
+    errors.workshopPm = 'Debes seleccionar un taller de la tarde.'
+  } else if (registrant.workshopAm) {
+    const amIdWorkshop = workshopsBySchedule.am.find((w) => w.id === registrant.workshopAm)?.idWorkshop
+    const pmIdWorkshop = workshopsBySchedule.pm.find((w) => w.id === registrant.workshopPm)?.idWorkshop
+    if (amIdWorkshop && pmIdWorkshop && amIdWorkshop === pmIdWorkshop) {
+      errors.workshopPm = 'No puedes elegir el mismo taller en la mañana y en la tarde.'
+    }
   }
 
   if (!phone) {
@@ -287,7 +298,8 @@ function getStepTouched(currentStep: number, totalParticipants: number): FormikT
             age: true,
             dietType: true,
             needsAccommodation: true,
-            workshops: true,
+            workshopAm: true,
+            workshopPm: true,
             phone: true,
             email: true,
           }
@@ -296,7 +308,7 @@ function getStepTouched(currentStep: number, totalParticipants: number): FormikT
   }
 }
 
-function validateByStep(values: RegistrationFormValues, currentStep: number): FormikErrors<RegistrationFormValues> {
+function validateByStep(values: RegistrationFormValues, currentStep: number, workshopsBySchedule: WorkshopsBySchedule): FormikErrors<RegistrationFormValues> {
   const errors: FormikErrors<RegistrationFormValues> = {}
   const companionCount = getSafeCompanionCount(values.companionCount)
   const totalParticipants = companionCount + 1
@@ -331,7 +343,7 @@ function validateByStep(values: RegistrationFormValues, currentStep: number): Fo
       return errors
     }
 
-    const participantErrors = getParticipantStepErrors(registrant)
+    const participantErrors = getParticipantStepErrors(registrant, workshopsBySchedule)
 
     if (Object.keys(participantErrors).length > 0) {
       const registrantErrors = Array.from(
@@ -554,7 +566,7 @@ type ParticipantStepProps = {
   participantIndex: number
   currentStep: number
   showErrors: boolean
-  workshopOptions: WorkshopOption[]
+  workshopsBySchedule: WorkshopsBySchedule
   workshopsLoading: boolean
 }
 
@@ -563,7 +575,7 @@ function ParticipantStepPanel({
   participantIndex,
   currentStep,
   showErrors,
-  workshopOptions,
+  workshopsBySchedule,
   workshopsLoading,
 }: Readonly<ParticipantStepProps>) {
   const participantErrors = formik.errors.registrants?.[participantIndex] as
@@ -573,22 +585,6 @@ function ParticipantStepPanel({
   const emailSuggestions = buildEmailSuggestions(formik.values.registrants[participantIndex]?.email ?? '')
   const emailSuggestionsListId = `registrants.${participantIndex}.email-suggestions`
 
-  function toggleWorkshopSelection(workshopId: string) {
-    const currentSelection = formik.values.registrants[participantIndex]?.workshops ?? []
-    const hasWorkshop = currentSelection.includes(workshopId)
-
-    let nextSelection: string[]
-
-    if (hasWorkshop) {
-      nextSelection = currentSelection.filter((id) => id !== workshopId)
-    } else if (currentSelection.length < 2) {
-      nextSelection = [...currentSelection, workshopId]
-    } else {
-      nextSelection = currentSelection
-    }
-
-    formik.setFieldValue(`registrants.${participantIndex}.workshops`, nextSelection, true)
-  }
 
   function handleFormattedBlur(
     fieldName: string,
@@ -793,49 +789,98 @@ function ParticipantStepPanel({
         </fieldset>
 
         <fieldset className="registration-field registration-field-wide registration-choice-group">
-          <legend className="registration-label">Selecciona uno o dos talleres de tu interés</legend>
-          <p className="registration-helper-text">Debes elegir entre 1 y 2 talleres para esta participante.</p>
-          <div className="registration-workshops-grid" role="group" aria-label="Listado de talleres disponibles">
+          <legend className="registration-label">Taller de la mañana</legend>
+          <div className="registration-workshops-grid" role="group" aria-label="Talleres disponibles en la mañana">
             {workshopsLoading
-              ? Array.from({ length: 4 }, (_, index) => (
-                  <div key={`workshop-skeleton-${index + 1}`} className="registration-workshop-skeleton" aria-hidden="true" />
+              ? Array.from({ length: 3 }, (_, index) => (
+                  <div key={`am-skeleton-${index + 1}`} className="registration-workshop-skeleton" aria-hidden="true" />
                 ))
               : null}
 
-            {!workshopsLoading && workshopOptions.length === 0 ? (
-              <p className="registration-workshops-empty">No hay cupos para talleres</p>
+            {!workshopsLoading && workshopsBySchedule.am.length === 0 ? (
+              <p className="registration-workshops-empty">No hay talleres disponibles en la mañana</p>
             ) : null}
 
             {!workshopsLoading
-              ? workshopOptions.map((workshopOption, workshopIndex) => {
-                  const selectedWorkshops = formik.values.registrants[participantIndex]?.workshops ?? []
-                  const isSelected = selectedWorkshops.includes(workshopOption.id)
-                  const disableOption = !isSelected && selectedWorkshops.length >= 2
-
+              ? workshopsBySchedule.am.map((option) => {
+                  const isSelected = formik.values.registrants[participantIndex]?.workshopAm === option.id
                   return (
-                    <label key={workshopOption.id} className={`registration-workshop-option ${disableOption ? 'is-disabled' : ''}`} htmlFor={`registrants.${participantIndex}.workshops.${workshopIndex}`}>
+                    <label key={option.id} className="registration-workshop-option" htmlFor={`registrants.${participantIndex}.workshopAm.${option.id}`}>
                       <input
-                        id={`registrants.${participantIndex}.workshops.${workshopIndex}`}
-                        type="checkbox"
+                        id={`registrants.${participantIndex}.workshopAm.${option.id}`}
+                        type="radio"
+                        name={`registrants.${participantIndex}.workshopAm`}
+                        value={option.id}
                         checked={isSelected}
                         onChange={() => {
-                          toggleWorkshopSelection(workshopOption.id)
+                          formik.setFieldValue(`registrants.${participantIndex}.workshopAm`, option.id, true)
+                          const currentPmId = formik.values.registrants[participantIndex]?.workshopPm
+                          if (currentPmId) {
+                            const pmIdWorkshop = workshopsBySchedule.pm.find((w) => w.id === currentPmId)?.idWorkshop
+                            if (pmIdWorkshop && pmIdWorkshop === option.idWorkshop) {
+                              formik.setFieldValue(`registrants.${participantIndex}.workshopPm`, '', true)
+                            }
+                          }
                         }}
                         onBlur={() => {
-                          formik.setFieldTouched(`registrants.${participantIndex}.workshops`, true, true)
+                          formik.setFieldTouched(`registrants.${participantIndex}.workshopAm`, true, true)
                         }}
-                        disabled={disableOption}
                       />
-                      <span>{workshopOption.workshop}</span>
+                      <span>{option.workshop}</span>
                     </label>
                   )
                 })
               : null}
           </div>
-          <p className="registration-selection-counter">
-            Seleccionados: {(formik.values.registrants[participantIndex]?.workshops ?? []).length}/2
-          </p>
-          {showErrors && participantErrors?.workshops ? <span className="registration-error">{participantErrors.workshops}</span> : null}
+          {showErrors && participantErrors?.workshopAm ? <span className="registration-error">{participantErrors.workshopAm}</span> : null}
+        </fieldset>
+
+        <fieldset className="registration-field registration-field-wide registration-choice-group">
+          <legend className="registration-label">Taller de la tarde</legend>
+          <div className="registration-workshops-grid" role="group" aria-label="Talleres disponibles en la tarde">
+            {workshopsLoading
+              ? Array.from({ length: 3 }, (_, index) => (
+                  <div key={`pm-skeleton-${index + 1}`} className="registration-workshop-skeleton" aria-hidden="true" />
+                ))
+              : null}
+
+            {!workshopsLoading && workshopsBySchedule.pm.length === 0 ? (
+              <p className="registration-workshops-empty">No hay talleres disponibles en la tarde</p>
+            ) : null}
+
+            {!workshopsLoading
+              ? (() => {
+                  const selectedAmIdWorkshop = workshopsBySchedule.am.find(
+                    (w) => w.id === formik.values.registrants[participantIndex]?.workshopAm,
+                  )?.idWorkshop
+
+                  return workshopsBySchedule.pm.map((option) => {
+                    const isSelected = formik.values.registrants[participantIndex]?.workshopPm === option.id
+                    const isDisabled = Boolean(selectedAmIdWorkshop && option.idWorkshop === selectedAmIdWorkshop)
+                    return (
+                      <label key={option.id} className={`registration-workshop-option ${isDisabled ? 'is-disabled' : ''}`} htmlFor={`registrants.${participantIndex}.workshopPm.${option.id}`}>
+                        <input
+                          id={`registrants.${participantIndex}.workshopPm.${option.id}`}
+                          type="radio"
+                          name={`registrants.${participantIndex}.workshopPm`}
+                          value={option.id}
+                          checked={isSelected}
+                          disabled={isDisabled}
+                          onChange={() => {
+                            formik.setFieldValue(`registrants.${participantIndex}.workshopPm`, option.id, true)
+                          }}
+                          onBlur={() => {
+                            formik.setFieldTouched(`registrants.${participantIndex}.workshopPm`, true, true)
+                          }}
+                        />
+                        <span>{option.workshop}</span>
+                      </label>
+                    )
+                  })
+                })()
+              : null}
+          </div>
+          {showErrors && participantErrors?.workshopPm ? <span className="registration-error">{participantErrors.workshopPm}</span> : null}
         </fieldset>
       </div>
     </section>
@@ -968,7 +1013,7 @@ export function RegistrationWizard() {
   const [isSuccessScreenVisible, setIsSuccessScreenVisible] = useState(false)
   const [redirectCountdownSeconds, setRedirectCountdownSeconds] = useState(10)
   const [attemptedSteps, setAttemptedSteps] = useState<Record<number, boolean>>({})
-  const [workshopOptions, setWorkshopOptions] = useState<WorkshopOption[]>([])
+  const [workshopsBySchedule, setWorkshopsBySchedule] = useState<WorkshopsBySchedule>({ am: [], pm: [] })
   const [workshopsRequestState, setWorkshopsRequestState] = useState<'loading' | 'loaded' | 'error'>('loading')
 
   const initialValues = useMemo<RegistrationFormValues>(
@@ -990,12 +1035,12 @@ export function RegistrationWizard() {
     initialValues,
     validateOnBlur: true,
     validateOnChange: false,
-    validate: (values) => validateByStep(values, currentStep),
+    validate: (values) => validateByStep(values, currentStep, workshopsBySchedule),
     onSubmit: async (values, helpers) => {
       setIsLoading(true)
       try {
         const totalParticipants = getSafeCompanionCount(values.companionCount) + 1
-        const result = await submitRegistration(values, totalParticipants)
+        const result = await submitRegistration(values, totalParticipants, workshopsBySchedule)
         toast.success(result.apiResponse.message)
         setIsSuccessScreenVisible(true)
         setRedirectCountdownSeconds(10)
@@ -1025,13 +1070,15 @@ export function RegistrationWizard() {
     let isMounted = true
 
     fetchWorkshopOptions()
-      .then((options) => {
+      .then((data) => {
         if (!isMounted) {
           return
         }
 
-        const enabledOptions = options.filter((option) => option.isEnabled)
-        setWorkshopOptions(enabledOptions)
+        setWorkshopsBySchedule({
+          am: data.am.filter((o) => o.isEnabled),
+          pm: data.pm.filter((o) => o.isEnabled),
+        })
         setWorkshopsRequestState('loaded')
       })
       .catch(() => {
@@ -1039,7 +1086,7 @@ export function RegistrationWizard() {
           return
         }
 
-        setWorkshopOptions([])
+        setWorkshopsBySchedule({ am: [], pm: [] })
         setWorkshopsRequestState('error')
       })
 
@@ -1109,7 +1156,7 @@ export function RegistrationWizard() {
         participantIndex={participantIndex}
         currentStep={currentStep}
         showErrors={showParticipantErrors}
-        workshopOptions={workshopOptions}
+        workshopsBySchedule={workshopsBySchedule}
         workshopsLoading={workshopsRequestState === 'loading'}
       />
     )

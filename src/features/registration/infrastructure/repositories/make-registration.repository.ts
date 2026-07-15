@@ -1,5 +1,5 @@
 import { env } from '@shared/config/env'
-import type { RegistrationPayload, WorkshopOption } from '@features/registration/domain/entities/registration'
+import type { RegistrationPayload, WorkshopOption, WorkshopsBySchedule } from '@features/registration/domain/entities/registration'
 
 const MAKE_REGISTRATION_PATH = '/ycww8er2htyap4dikfsqdk6xwy9o5ut6'
 const MAKE_WORKSHOPS_PATH = '/y5dyby9m30ni4v622lciw7snc03b35ng'
@@ -25,12 +25,14 @@ function normalizeWorkshopOption(raw: unknown): WorkshopOption | null {
 
   const candidate = raw as Record<string, unknown>
   const id = candidate.id
+  const idWorkshop = candidate.idWorshop ?? candidate.idWorkshop
   const workshop = candidate.workshop
   const countRegistered = candidate.countRegistered
   const isEnabled = candidate.isEnabled
 
   if (
     typeof id !== 'string' ||
+    typeof idWorkshop !== 'string' ||
     typeof workshop !== 'string' ||
     typeof countRegistered !== 'number' ||
     typeof isEnabled !== 'boolean'
@@ -40,13 +42,14 @@ function normalizeWorkshopOption(raw: unknown): WorkshopOption | null {
 
   return {
     id,
+    idWorkshop,
     workshop,
     countRegistered,
     isEnabled,
   }
 }
 
-export async function fetchWorkshopOptions(): Promise<WorkshopOption[]> {
+export async function fetchWorkshopOptions(): Promise<WorkshopsBySchedule> {
   if (!env.makeWebhookUrl || !env.makeWebhookApiKey) {
     throw new Error('Faltan variables de entorno para obtener talleres (VITE_MAKE_WEBHOOK_URL y VITE_MAKE_API_KEY).')
   }
@@ -65,11 +68,16 @@ export async function fetchWorkshopOptions(): Promise<WorkshopOption[]> {
 
   const data: unknown = await response.json()
 
-  if (!Array.isArray(data)) {
-    throw new TypeError('Formato de talleres invalido. Se esperaba un arreglo.')
+  if (!data || typeof data !== 'object' || !('am' in data) || !('pm' in data)) {
+    throw new TypeError('Formato de talleres invalido. Se esperaba un objeto con am y pm.')
   }
 
-  return data.map(normalizeWorkshopOption).filter((option): option is WorkshopOption => option !== null)
+  const raw = data as { am: unknown[]; pm: unknown[] }
+
+  return {
+    am: (Array.isArray(raw.am) ? raw.am : []).map(normalizeWorkshopOption).filter((o): o is WorkshopOption => o !== null),
+    pm: (Array.isArray(raw.pm) ? raw.pm : []).map(normalizeWorkshopOption).filter((o): o is WorkshopOption => o !== null),
+  }
 }
 
 export async function sendRegistration(payload: RegistrationPayload): Promise<MakeRegistrationResponse> {
