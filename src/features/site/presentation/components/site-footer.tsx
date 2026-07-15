@@ -28,6 +28,9 @@ export function SiteFooter() {
               <li>
                 <Link to="/politica-de-privacidad">Politica de Privacidad</Link>
               </li>
+              <li>
+                <Link to="/equipo-organizador/login">Acceso interno</Link>
+              </li>
             </ul>
           </div>
           <div className="footer-section">

@@ -65,6 +65,11 @@ export function SiteHeader({ title }: Readonly<SiteHeaderProps>) {
                   Contacto
                 </Link>
               </li>
+              <li>
+                <Link to="/equipo-organizador/login" className="nav-link nav-link-organizer">
+                  Acceso interno
+                </Link>
+              </li>
             </ul>
           </div>
         </nav>

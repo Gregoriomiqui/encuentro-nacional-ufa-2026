@@ -3,9 +3,12 @@ import { Route, Routes } from 'react-router-dom'
 import { SiteLayout } from '@features/site/presentation/components/site-layout'
 import { NotFoundPage } from '@pages/not-found-page'
 import { PrivacyPage } from '@pages/privacy-page'
+import { OrganizerLoginPage } from '@pages/organizer-login-page'
 import { RegistrationPage } from '@pages/registration-page'
+import { OrganizerFailedRegistrationValidationPage } from '@pages/organizer-failed-registration-validation-page'
 import { SiteHomePage } from '@pages/site-home-page'
 import { TermsPage } from '@pages/terms-page'
+import { OrganizerRouteGuard } from '@app/router/organizer-route-guard'
 
 export function AppRouter() {
   return (
@@ -39,6 +42,24 @@ export function AppRouter() {
         element={
           <SiteLayout title="UFA ACYM Chile">
             <PrivacyPage />
+          </SiteLayout>
+        }
+      />
+      <Route
+        path="/equipo-organizador/validacion-registro-fallido"
+        element={
+          <SiteLayout title="UFA ACYM Chile">
+            <OrganizerRouteGuard>
+              <OrganizerFailedRegistrationValidationPage />
+            </OrganizerRouteGuard>
+          </SiteLayout>
+        }
+      />
+      <Route
+        path="/equipo-organizador/login"
+        element={
+          <SiteLayout title="UFA ACYM Chile">
+            <OrganizerLoginPage />
           </SiteLayout>
         }
       />

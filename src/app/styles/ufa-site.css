@@ -603,6 +603,62 @@ a:hover {
     position: relative;
 }
 
+.registration-secondary-module {
+    width: 100%;
+    max-width: 920px;
+    margin: var(--spacing-lg) auto 0;
+}
+
+.organizer-session-bar {
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto var(--spacing-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(217, 28, 122, 0.2);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(250, 246, 249, 0.98));
+}
+
+.organizer-session-text {
+    margin: 0;
+    color: var(--gray-700);
+    font-weight: var(--font-weight-semibold);
+}
+
+.organizer-signout-button {
+    flex-shrink: 0;
+}
+
+.organizer-auth-card {
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+.organizer-auth-form {
+    display: grid;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+.organizer-auth-actions {
+    justify-content: flex-end;
+    margin-top: var(--spacing-sm);
+}
+
+.organizer-auth-error {
+    margin-top: var(--spacing-sm);
+}
+
+.organizer-auth-note {
+    margin-top: var(--spacing-md);
+    color: var(--gray-600);
+    font-size: 0.92rem;
+}
+
 .registration-module > .registration-stepper-container,
 .registration-module > .registration-card {
     width: 100%;
@@ -726,6 +782,40 @@ a:hover {
 .registration-panel-subtitle {
     color: var(--gray-600);
     margin-bottom: var(--spacing-md);
+}
+
+.registration-success-panel {
+    display: grid;
+    gap: var(--spacing-sm);
+    justify-items: center;
+    text-align: center;
+    padding: clamp(1rem, 2.4vw, 2.5rem);
+}
+
+.registration-success-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    background-color: #ecfdf3;
+    border: 1px solid #75e0a7;
+    color: #027a48;
+    font-size: 0.82rem;
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.registration-success-title {
+    margin-bottom: 0;
+    font-size: clamp(1.5rem, 3.1vw, 2rem);
+}
+
+.registration-success-text {
+    margin-bottom: 0;
+    color: var(--gray-700);
+    max-width: 38ch;
 }
 
 .registration-grid {
@@ -1436,6 +1526,23 @@ a:hover {
     /* Registration mobile improvements */
     .registration-module {
         padding: var(--spacing-md) 0;
+    }
+
+    .registration-secondary-module {
+        margin-top: var(--spacing-md);
+    }
+
+    .organizer-session-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .organizer-auth-actions {
+        justify-content: stretch;
+    }
+
+    .organizer-auth-actions .button {
+        width: 100%;
     }
 
     .registration-stepper-container {

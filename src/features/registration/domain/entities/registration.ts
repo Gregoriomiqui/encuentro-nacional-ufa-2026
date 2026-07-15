@@ -16,7 +16,7 @@ export type RegistrationRegistrant = {
   age: number
   diet_type: RegistrationDietType
   needs_accommodation: boolean
-  workshop_choices: string[]
+  workshop_choices: WorkshopChoice[]
   phone: string
   email: string
   is_primary_contact: boolean
@@ -24,9 +24,23 @@ export type RegistrationRegistrant = {
 
 export interface WorkshopOption {
   id: string
+  idWorkshop: string
   workshop: string
   countRegistered: number
   isEnabled: boolean
+}
+
+export interface WorkshopsBySchedule {
+  am: WorkshopOption[]
+  pm: WorkshopOption[]
+}
+
+export type WorkshopSchedule = 'am' | 'pm'
+
+export interface WorkshopChoice {
+  id: string
+  workshop: string
+  schedule: WorkshopSchedule
 }
 
 export type RegistrationPayload = {
@@ -49,7 +63,8 @@ export type RegistrationFormRegistrant = {
   age: string
   dietType: '' | RegistrationDietType
   needsAccommodation: boolean
-  workshops: string[]
+  workshopAm: string
+  workshopPm: string
   phone: string
   email: string
 }

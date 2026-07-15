@@ -84,6 +84,16 @@ export function MobileNavMenu({ isOpen, onClose, onMenuItemClick }: Readonly<Mob
               <span>Contacto</span>
             </Link>
           </li>
+          <li>
+            <Link
+              to="/equipo-organizador/login"
+              className="mobile-nav-item mobile-nav-item-organizer"
+              onClick={handleMenuItemClick}
+            >
+              <span className="nav-icon">🔒</span>
+              <span>Acceso interno</span>
+            </Link>
+          </li>
         </ul>
       </nav>
     </>
