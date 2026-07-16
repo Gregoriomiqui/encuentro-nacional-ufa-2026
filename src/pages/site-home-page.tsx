@@ -11,7 +11,7 @@ export function SiteHomePage() {
             <span className="hero-title-line hero-title-line-bottom">Transformadas</span>
           </h2>
           <p className="hero-subtitle">Union Femenina Aliancista</p>
-          <p className="hero-description">"La semilla que cayo en buen terreno"</p>
+          <p className="hero-description">"La semilla que cayó en buen terreno"</p>
           <p className="hero-verse">Mateo 13:23 NVI</p>
           <div className="hero-cta-row">
             <a href="#inscripcion" className="cta-button cta-button-soft">
@@ -36,10 +36,10 @@ export function SiteHomePage() {
           <div className="content-grid">
             <article className="card">
               <h3 className="card-title">Fecha</h3>
-              <p className="card-text">30 y 31 de octubre, y 1 de noviembre de 2026</p>
+              <p className="card-text">30 y 31 de octubre y 1 de noviembre de 2026</p>
             </article>
             <article className="card">
-              <h3 className="card-title">Ubicacion</h3>
+              <h3 className="card-title">Ubicación</h3>
               <p className="card-text">Teatro Municipal de Temuco</p>
             </article>
             <article className="card">
@@ -55,7 +55,7 @@ export function SiteHomePage() {
           <h2 className="section-title">Inscripción</h2>
           <div className="inscription-content">
             <p className="inscription-text">
-              La inscripción se realiza en una pagina dedicada con formulario por pasos, comprobante de pago y validación
+              La inscripción se realiza en una página dedicada con formulario por pasos, comprobante de pago y validación
               de datos.
             </p>
             <div className="button-group">
@@ -72,11 +72,11 @@ export function SiteHomePage() {
           <h2 className="section-title">Contacto</h2>
           <div className="contact-info">
             <p className="contact-text">
-              Para mas informacion sobre el Encuentro Nacional UFA "Mujeres Transformadas", puedes contactarnos a traves
+              Para más información sobre el Encuentro Nacional UFA "Mujeres Transformadas", puedes contactarnos a través
               de tu iglesia local de la Alianza Cristiana y Misionera.
             </p>
             <div className="social-links">
-              <p className="contact-subtitle">Siguenos en nuestras redes sociales</p>
+              <p className="contact-subtitle">Síguenos en nuestras redes sociales</p>
             </div>
           </div>
         </div>
