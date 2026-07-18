@@ -50,6 +50,15 @@ export function FailedRegistrationValidationForm() {
 
   return (
     <section className="failed-validation-module" aria-labelledby="failed-validation-title">
+      {isLoading && (
+        <div className="registration-overlay" aria-live="assertive" role="alert">
+          <div className="registration-overlay-content">
+            <div className="registration-spinner" aria-hidden="true" />
+            <p className="registration-overlay-title">Validando registro...</p>
+            <p className="registration-overlay-warning">Por favor no refresques ni cambies de pantalla.</p>
+          </div>
+        </div>
+      )}
       <div className="registration-card failed-validation-card">
         <p className="failed-validation-internal-badge">Uso exclusivo: equipo organizador</p>
 

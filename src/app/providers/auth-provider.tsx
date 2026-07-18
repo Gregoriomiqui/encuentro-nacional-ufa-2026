@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type PropsWithChildren } from 'react'
 import {
   browserLocalPersistence,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   setPersistence,
   signInWithEmailAndPassword,
   signOut,
@@ -91,6 +92,13 @@ export function AuthProvider({ children }: Readonly<PropsWithChildren>) {
         }
 
         await signOut(getFirebaseAuth())
+      },
+      sendPasswordReset: async (email: string) => {
+        if (!configured) {
+          return
+        }
+        const auth = getFirebaseAuth()
+        await sendPasswordResetEmail(auth, email)
       },
     }),
     [configured, errorMessage, loading, user],

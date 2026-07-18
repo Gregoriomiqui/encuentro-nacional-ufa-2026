@@ -3,8 +3,12 @@ import { Link, Navigate, useLocation, useNavigate, type Location } from 'react-r
 import toast from 'react-hot-toast'
 
 import { useAuth } from '@app/providers/auth-context'
+import { PasswordInput } from '@shared/ui/components/password-input'
+
+import './organizer-login-page.css'
 
 const ORGANIZER_TARGET_PATH = '/equipo-organizador/validacion-registro-fallido'
+
 
 type OrganizerLoginLocationState = {
   from?: Location
@@ -14,7 +18,7 @@ type OrganizerLoginLocationState = {
 export function OrganizerLoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { configured, errorMessage, loading, signIn, user } = useAuth()
+  const { configured, errorMessage, loading, sendPasswordReset, signIn, user } = useAuth()
   const state = location.state as OrganizerLoginLocationState | null
 
   const [email, setEmail] = useState('')
@@ -46,6 +50,22 @@ export function OrganizerLoginPage() {
       toast.error(error instanceof Error ? error.message : 'No fue posible iniciar sesión.')
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  async function handlePasswordReset() {
+    if (!email) {
+      toast.error('Por favor, ingresa tu correo electrónico para restablecer la contraseña.')
+      return
+    }
+
+    try {
+      await sendPasswordReset(email)
+      toast.success('Se ha enviado un correo para restablecer tu contraseña.')
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'No fue posible enviar el correo de restablecimiento.',
+      )
     }
   }
 
@@ -109,19 +129,15 @@ export function OrganizerLoginPage() {
                   />
                 </label>
 
-                <label className="registration-field" htmlFor="organizerPassword">
-                  <span className="registration-label">Contraseña</span>
-                  <input
-                    id="organizerPassword"
-                    name="password"
-                    type="password"
-                    value={password}
-                    onChange={(event) => setPassword(event.currentTarget.value)}
-                    className="registration-input"
-                    autoComplete="current-password"
-                    placeholder="Ingresa tu contraseña"
-                  />
-                </label>
+                <PasswordInput
+                  id="organizerPassword"
+                  name="password"
+                  label="Contraseña"
+                  value={password}
+                  onChange={(event) => setPassword(event.currentTarget.value)}
+                  autoComplete="current-password"
+                  placeholder="Ingresa tu contraseña"
+                />
 
                 <div className="registration-actions organizer-auth-actions">
                   <button type="submit" className="button button-primary" disabled={isSubmitting || !configured}>
@@ -130,9 +146,14 @@ export function OrganizerLoginPage() {
                 </div>
               </form>
 
-              <p className="organizer-auth-note">
-                ¿No tienes acceso? Vuelve al <Link to="/">inicio del sitio</Link>.
-              </p>
+              <div className="organizer-auth-footer">
+                <button type="button" className="link-button" onClick={handlePasswordReset}>
+                  ¿Olvidaste tu contraseña?
+                </button>
+                <p className="organizer-auth-note">
+                  ¿No tienes acceso? Vuelve al <Link to="/">inicio del sitio</Link>.
+                </p>
+              </div>
             </div>
           </div>
         </div>

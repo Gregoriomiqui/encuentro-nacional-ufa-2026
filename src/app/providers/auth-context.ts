@@ -8,6 +8,7 @@ export type AuthContextValue = {
   errorMessage: string | null
   signIn: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
+  sendPasswordReset: (email: string) => Promise<void>
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null)
