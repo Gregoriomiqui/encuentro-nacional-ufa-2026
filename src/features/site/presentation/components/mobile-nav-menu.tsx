@@ -75,6 +75,16 @@ export function MobileNavMenu({ isOpen, onClose, onMenuItemClick }: Readonly<Mob
             </NavLink>
           </li>
           <li>
+            <NavLink
+              to="/inscripcion-staff"
+              className={({ isActive }) => `mobile-nav-item${isActive ? ' active' : ''}`}
+              onClick={handleMenuItemClick}
+            >
+              <span className="nav-icon">🎯</span>
+              <span>Inscripción Staff</span>
+            </NavLink>
+          </li>
+          <li>
             <Link
               to="/#contacto"
               className="mobile-nav-item"

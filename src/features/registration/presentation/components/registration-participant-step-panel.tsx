@@ -85,6 +85,7 @@ type ParticipantStepPanelProps = {
   showErrors: boolean
   workshopsBySchedule: WorkshopsBySchedule
   workshopsLoading: boolean
+  withWorkshops?: boolean
   onParticipantRutBlur: (participant: number, event: FocusEvent<HTMLInputElement>) => Promise<void>
   onParticipantPhoneBlur: (participant: number, event: FocusEvent<HTMLInputElement>) => Promise<void>
   getEmailSuggestions: (rawEmail: string) => string[]
@@ -96,6 +97,7 @@ type ParticipantFormFieldsProps = {
   showErrors: boolean
   workshopsBySchedule: WorkshopsBySchedule
   workshopsLoading: boolean
+  withWorkshops?: boolean
   participantErrors: Partial<Record<keyof RegistrationFormRegistrant, string>> | undefined
   emailSuggestions: string[]
   emailSuggestionsListId: string
@@ -234,6 +236,7 @@ function ParticipantFormFields({
   showErrors,
   workshopsBySchedule,
   workshopsLoading,
+  withWorkshops = true,
   participantErrors,
   emailSuggestions,
   emailSuggestionsListId,
@@ -416,23 +419,26 @@ function ParticipantFormFields({
         </label>
       </fieldset>
 
-      <MorningWorkshopField
-        formik={formik}
-        participantIndex={participantIndex}
-        showErrors={showErrors}
-        workshopsBySchedule={workshopsBySchedule}
-        workshopsLoading={workshopsLoading}
-        participantErrors={participantErrors}
-      />
-
-      <AfternoonWorkshopField
-        formik={formik}
-        participantIndex={participantIndex}
-        showErrors={showErrors}
-        workshopsBySchedule={workshopsBySchedule}
-        workshopsLoading={workshopsLoading}
-        participantErrors={participantErrors}
-      />
+      {withWorkshops && (
+        <>
+          <MorningWorkshopField
+            formik={formik}
+            participantIndex={participantIndex}
+            showErrors={showErrors}
+            workshopsBySchedule={workshopsBySchedule}
+            workshopsLoading={workshopsLoading}
+            participantErrors={participantErrors}
+          />
+          <AfternoonWorkshopField
+            formik={formik}
+            participantIndex={participantIndex}
+            showErrors={showErrors}
+            workshopsBySchedule={workshopsBySchedule}
+            workshopsLoading={workshopsLoading}
+            participantErrors={participantErrors}
+          />
+        </>
+      )}
     </div>
   )
 }
@@ -444,6 +450,7 @@ export function RegistrationParticipantStepPanel({
   showErrors,
   workshopsBySchedule,
   workshopsLoading,
+  withWorkshops = true,
   onParticipantRutBlur,
   onParticipantPhoneBlur,
   getEmailSuggestions,
@@ -469,6 +476,7 @@ export function RegistrationParticipantStepPanel({
         showErrors={showErrors}
         workshopsBySchedule={workshopsBySchedule}
         workshopsLoading={workshopsLoading}
+        withWorkshops={withWorkshops}
         participantErrors={participantErrors}
         emailSuggestions={emailSuggestions}
         emailSuggestionsListId={emailSuggestionsListId}

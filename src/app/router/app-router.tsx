@@ -8,6 +8,7 @@ import { RegistrationPage } from '@pages/registration-page'
 import { OrganizerFailedRegistrationValidationPage } from '@pages/organizer-failed-registration-validation-page'
 import { SiteHomePage } from '@pages/site-home-page'
 import { TermsPage } from '@pages/terms-page'
+import { StaffRegistrationPage } from '@pages/staff-registration-page'
 import { OrganizerRouteGuard } from '@app/router/organizer-route-guard'
 
 export function AppRouter() {
@@ -26,6 +27,14 @@ export function AppRouter() {
         element={
           <SiteLayout title="UFA ACYM Chile">
             <RegistrationPage />
+          </SiteLayout>
+        }
+      />
+      <Route
+        path="/inscripcion-staff"
+        element={
+          <SiteLayout title="UFA ACYM Chile">
+            <StaffRegistrationPage />
           </SiteLayout>
         }
       />

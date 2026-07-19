@@ -61,6 +61,11 @@ export function SiteHeader({ title }: Readonly<SiteHeaderProps>) {
                 </NavLink>
               </li>
               <li>
+                <NavLink to="/inscripcion-staff" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>
+                  Inscripción Staff
+                </NavLink>
+              </li>
+              <li>
                 <Link to="/#contacto" className="nav-link">
                   Contacto
                 </Link>
