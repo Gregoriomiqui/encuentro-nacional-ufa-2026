@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import toast from 'react-hot-toast'
 
 import { submitStaffRegistration } from '@features/registration/application/use-cases/submit-staff-registration.use-case'
+import type { StaffRegistrationFormValues } from '@features/registration/domain/entities/staff-registration'
 import { useStaffRegistration } from './useStaffRegistration'
 
 vi.mock('@features/registration/application/use-cases/submit-staff-registration.use-case')
@@ -13,7 +14,7 @@ vi.mock('react-hot-toast', () => ({
   Toaster: () => null,
 }))
 
-const VALID_VALUES = {
+const VALID_VALUES: StaffRegistrationFormValues = {
   districtName: 'Distrito Norte',
   churchOrigin: 'Arica',
   rut: '12345678-5',
