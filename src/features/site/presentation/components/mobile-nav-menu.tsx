@@ -81,7 +81,7 @@ export function MobileNavMenu({ isOpen, onClose, onMenuItemClick }: Readonly<Mob
               onClick={handleMenuItemClick}
             >
               <span className="nav-icon">🎯</span>
-              <span>Inscripción Staff</span>
+              <span>Staff</span>
             </NavLink>
           </li>
           <li>
