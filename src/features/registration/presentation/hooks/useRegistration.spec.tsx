@@ -115,10 +115,12 @@ describe('useRegistration', () => {
     })
 
     await waitFor(() => {
+      const registrantError = result.current.formik.errors.registrants?.[0]
+      const workshopPmError =
+        registrantError && typeof registrantError !== 'string' ? registrantError.workshopPm : undefined
+
       expect(result.current.currentStep).toBe(1)
-      expect(result.current.formik.errors.registrants?.[0]?.workshopPm).toBe(
-        'No puedes elegir el mismo taller en la mañana y en la tarde.',
-      )
+      expect(workshopPmError).toBe('No puedes elegir el mismo taller en la mañana y en la tarde.')
     })
   })
 })
