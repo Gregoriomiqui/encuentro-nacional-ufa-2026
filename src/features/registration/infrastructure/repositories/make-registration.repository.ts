@@ -2,7 +2,7 @@ import { env } from '@shared/config/env'
 import type { RegistrationPayload, WorkshopOption, WorkshopsBySchedule } from '@features/registration/domain/entities/registration'
 
 const MAKE_REGISTRATION_PATH = '/ycww8er2htyap4dikfsqdk6xwy9o5ut6'
-const MAKE_WORKSHOPS_PATH = '/y5dyby9m30ni4v622lciw7snc03b35ng'
+const MAKE_WORKSHOPS_PATH = '/sfnusa1islhf4niyydrpqprn1wwhyv5i'
 
 export type MakeRegistrationResponse = {
   success: boolean
