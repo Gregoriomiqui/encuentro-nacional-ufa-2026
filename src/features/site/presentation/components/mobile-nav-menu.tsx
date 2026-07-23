@@ -61,7 +61,7 @@ export function MobileNavMenu({ isOpen, onClose, onMenuItemClick }: Readonly<Mob
               onClick={handleMenuItemClick}
             >
               <span className="nav-icon">📅</span>
-              <span>El Evento</span>
+              <span>Evento</span>
             </Link>
           </li>
           <li>
@@ -101,7 +101,7 @@ export function MobileNavMenu({ isOpen, onClose, onMenuItemClick }: Readonly<Mob
               onClick={handleMenuItemClick}
             >
               <span className="nav-icon">🔒</span>
-              <span>Acceso interno</span>
+              <span>Acceso</span>
             </Link>
           </li>
         </ul>

@@ -5,7 +5,7 @@ export function SiteHomePage() {
     <main className="main-content">
       <section className="hero">
         <div className="hero-content">
-          <p className="hero-kicker">Encuentro Nacional 2026</p>
+          <h1 className="hero-app-name">Encuentro Nacional UFA 2026</h1>
           <h2 className="hero-title">
             <span className="hero-title-line hero-title-line-top">Mujeres</span>
             <span className="hero-title-line hero-title-line-bottom">Transformadas</span>
@@ -64,6 +64,20 @@ export function SiteHomePage() {
               </Link>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section id="sobre-la-aplicacion" className="section">
+        <div className="container">
+          <h2 className="section-title">Sobre la aplicación</h2>
+          <article className="card app-purpose-card">
+            <p className="card-text app-purpose-text">
+              Esta plataforma está destinada a los participantes y staff del <strong>Encuentro Nacional UFA 2026</strong>.
+              Permite gestionar inscripciones, validar credenciales y emitir pases de acceso mediante código QR. Al
+              iniciar sesión con tu cuenta de Google, utilizamos tu correo y nombre únicamente para autenticar tu
+              identidad y vincular tus pases de acceso al evento.
+            </p>
+          </article>
         </div>
       </section>
 

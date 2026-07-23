@@ -52,7 +52,7 @@ export function SiteHeader({ title }: Readonly<SiteHeaderProps>) {
               </li>
               <li>
                 <Link to="/#evento" className="nav-link">
-                  El Evento
+                  Evento
                 </Link>
               </li>
               <li>
@@ -72,7 +72,7 @@ export function SiteHeader({ title }: Readonly<SiteHeaderProps>) {
               </li>
               <li>
                 <Link to="/equipo-organizador/login" className="nav-link nav-link-organizer">
-                  Acceso interno
+                  Acceso
                 </Link>
               </li>
             </ul>
