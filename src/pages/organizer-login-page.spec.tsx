@@ -158,7 +158,7 @@ describe('OrganizerLoginPage', () => {
     await user.type(screen.getByLabelText('Contraseña'), 'password123')
     
     const submitButton = screen.getByRole('button', { name: 'Iniciar sesión' })
-    user.click(submitButton)
+    await user.click(submitButton)
 
     await waitFor(() => {
       expect(submitButton).toBeDisabled()

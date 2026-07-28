@@ -4,7 +4,7 @@ import type { FormikErrors } from 'formik'
 import toast from 'react-hot-toast'
 
 import { RegistrationDietType } from '@features/registration/domain/entities/registration'
-import type { StaffRegistrationFormValues } from '@features/registration/domain/entities/staff-registration'
+import { STAFF_TYPE_OPTIONS, type StaffRegistrationFormValues } from '@features/registration/domain/entities/staff-registration'
 import {
   formatRutIfNeeded,
   formatPhoneIfNeeded,
@@ -35,6 +35,7 @@ function validate(values: StaffRegistrationFormValues): FormikErrors<StaffRegist
   validateParticipantName(proxy, 'lastName', values.lastName.trim(), 'El apellido es obligatorio.')
   validateParticipantAge(proxy, values.age)
   validateParticipantContact(proxy, values.phone.trim(), values.email.trim())
+  if (!values.staffType) errors.staffType = 'Debes seleccionar un tipo de staff.'
   if (!values.dietType) proxy.dietType = 'Debes seleccionar un tipo de alimentación.'
 
   if (proxy.rut) errors.rut = proxy.rut
@@ -60,6 +61,7 @@ const initialValues: StaffRegistrationFormValues = {
   firstName: '',
   lastName: '',
   age: '',
+  staffType: '',
   dietType: '',
   needsAccommodation: false,
   phone: '',
@@ -143,6 +145,7 @@ export function useStaffRegistration() {
     onRutBlur,
     onPhoneBlur,
     getEmailSuggestions: buildEmailSuggestions,
+    staffTypeOptions: STAFF_TYPE_OPTIONS,
     dietOptions: [
       { value: RegistrationDietType.Traditional, label: 'Alimentación tradicional' },
       { value: RegistrationDietType.Vegetarian, label: 'Alimentación vegetariana' },
