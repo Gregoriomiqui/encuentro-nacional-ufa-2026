@@ -3,7 +3,7 @@ import type { FormikProps } from 'formik'
 import { Link } from 'react-router-dom'
 
 import { DISTRICT_NAMES, getChurchesByDistrict } from '@features/registration/domain/entities/church-directory'
-import type { StaffRegistrationFormValues } from '@features/registration/domain/entities/staff-registration'
+import type { StaffRegistrationFormValues, StaffType } from '@features/registration/domain/entities/staff-registration'
 import type { RegistrationDietType } from '@features/registration/domain/entities/registration'
 
 const NAME_ALLOWED_INPUT_REGEX = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]*$/
@@ -37,6 +37,7 @@ function isRutInputAllowed(value: string): boolean {
 
 type StaffRegistrationPanelProps = {
   formik: FormikProps<StaffRegistrationFormValues>
+  staffTypeOptions: { value: StaffType; label: string }[]
   dietOptions: { value: RegistrationDietType; label: string }[]
   onRutBlur: (event: FocusEvent<HTMLInputElement>) => Promise<void>
   onPhoneBlur: (event: FocusEvent<HTMLInputElement>) => Promise<void>
@@ -45,6 +46,7 @@ type StaffRegistrationPanelProps = {
 
 export function StaffRegistrationPanel({
   formik,
+  staffTypeOptions,
   dietOptions,
   onRutBlur,
   onPhoneBlur,
@@ -221,6 +223,22 @@ export function StaffRegistrationPanel({
             {emailSuggestions.map((s) => <option key={s} value={s} />)}
           </datalist>
           {fieldError('email')}
+        </label>
+
+        <label className="registration-field" htmlFor="staffType">
+          <span className="registration-label">Tipo de staff</span>
+          <select
+            id="staffType"
+            name="staffType"
+            value={formik.values.staffType}
+            onChange={(e) => formik.setFieldValue('staffType', e.currentTarget.value, true)}
+            onBlur={formik.handleBlur}
+            className="registration-input"
+          >
+            <option value="">Selecciona un tipo de staff</option>
+            {staffTypeOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+          </select>
+          {fieldError('staffType')}
         </label>
 
         <fieldset className="registration-field registration-choice-group">

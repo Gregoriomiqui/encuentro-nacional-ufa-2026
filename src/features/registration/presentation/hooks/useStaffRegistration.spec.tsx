@@ -21,6 +21,7 @@ const VALID_VALUES: StaffRegistrationFormValues = {
   firstName: 'Maria',
   lastName: 'Gonzalez',
   age: '30',
+  staffType: 'ALOJAMIENTO',
   dietType: 'TRADICIONAL',
   needsAccommodation: false,
   phone: '+56912345678',
@@ -37,7 +38,19 @@ describe('useStaffRegistration', () => {
     const { result } = renderHook(() => useStaffRegistration())
     expect(result.current.isLoading).toBe(false)
     expect(result.current.isSuccessScreenVisible).toBe(false)
+    expect(result.current.formik.values.staffType).toBe('')
     expect(result.current.formik.values.staffCode).toBe('')
+  })
+
+  it('does not submit when staffType is missing', async () => {
+    const { result } = renderHook(() => useStaffRegistration())
+
+    await act(async () => {
+      await result.current.formik.setValues({ ...VALID_VALUES, staffType: '' })
+    })
+    await act(async () => { await result.current.formik.submitForm() })
+
+    expect(submitStaffRegistration).not.toHaveBeenCalled()
   })
 
   it('does not submit when required fields are missing', async () => {

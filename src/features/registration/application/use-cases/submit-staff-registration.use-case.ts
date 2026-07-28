@@ -1,5 +1,10 @@
 import { RegistrationDietType } from '@features/registration/domain/entities/registration'
-import type { StaffRegistrationFormValues, StaffRegistrationPayload } from '@features/registration/domain/entities/staff-registration'
+import {
+  STAFF_TYPE_VALUES,
+  type StaffRegistrationFormValues,
+  type StaffRegistrationPayload,
+  type StaffType,
+} from '@features/registration/domain/entities/staff-registration'
 import { sendStaffRegistration } from '@features/registration/infrastructure/repositories/send-staff-registration.repository'
 import type { MakeRegistrationResponse } from '@features/registration/infrastructure/repositories/make-registration.repository'
 
@@ -15,10 +20,18 @@ function toDietType(value: StaffRegistrationFormValues['dietType']): Registratio
   throw new Error('Tipo de alimentación inválido.')
 }
 
+function toStaffType(value: StaffRegistrationFormValues['staffType']): StaffType {
+  if (STAFF_TYPE_VALUES.includes(value as StaffType)) {
+    return value as StaffType
+  }
+  throw new Error('Tipo de staff inválido.')
+}
+
 export async function submitStaffRegistration(values: StaffRegistrationFormValues): Promise<SubmitStaffRegistrationResult> {
   const payload: StaffRegistrationPayload = {
     district_name: values.districtName,
     church_origin: values.churchOrigin,
+    staff_type: toStaffType(values.staffType),
     staff_code: values.staffCode.trim(),
     accepts_terms: values.acceptsTerms,
     accepts_privacy_policy: values.acceptsPrivacyPolicy,

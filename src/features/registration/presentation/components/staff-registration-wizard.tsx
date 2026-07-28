@@ -11,6 +11,7 @@ export function StaffRegistrationWizard() {
     onRutBlur,
     onPhoneBlur,
     getEmailSuggestions,
+    staffTypeOptions,
     dietOptions,
   } = useStaffRegistration()
 
@@ -34,6 +35,7 @@ export function StaffRegistrationWizard() {
         <form className="registration-card" onSubmit={formik.handleSubmit} noValidate>
           <StaffRegistrationPanel
             formik={formik}
+            staffTypeOptions={staffTypeOptions}
             dietOptions={dietOptions}
             onRutBlur={onRutBlur}
             onPhoneBlur={onPhoneBlur}
