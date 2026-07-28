@@ -37,8 +37,8 @@ function isRutInputAllowed(value: string): boolean {
 
 type StaffRegistrationPanelProps = {
   formik: FormikProps<StaffRegistrationFormValues>
-  staffTypeOptions: { value: StaffType; label: string }[]
-  dietOptions: { value: RegistrationDietType; label: string }[]
+  staffTypeOptions: ReadonlyArray<{ value: StaffType; label: string }>
+  dietOptions: ReadonlyArray<{ value: RegistrationDietType; label: string }>
   onRutBlur: (event: FocusEvent<HTMLInputElement>) => Promise<void>
   onPhoneBlur: (event: FocusEvent<HTMLInputElement>) => Promise<void>
   getEmailSuggestions: (rawEmail: string) => string[]
