@@ -1,8 +1,18 @@
+function parseBooleanEnv(value: string | undefined): boolean {
+  if (!value) {
+    return false
+  }
+
+  const normalized = value.trim().toLowerCase()
+  return normalized === 'true' || normalized === '1' || normalized === 'yes' || normalized === 'on'
+}
+
 export const env = {
   apiBaseUrl: import.meta.env.VITE_API_BASE_URL ?? '',
   makeWebhookUrl: import.meta.env.VITE_MAKE_WEBHOOK_URL ?? '',
   makeWebhookApiKey: import.meta.env.VITE_MAKE_API_KEY ?? '',
   makeFailedValidationPath: import.meta.env.VITE_MAKE_FAILED_VALIDATION_PATH ?? '',
+  isMaintenance: parseBooleanEnv(import.meta.env.VITE_IS_MAINTENANCE),
   firebaseApiKey: import.meta.env.VITE_FIREBASE_API_KEY ?? '',
   firebaseAuthDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ?? '',
   firebaseProjectId: import.meta.env.VITE_FIREBASE_PROJECT_ID ?? '',

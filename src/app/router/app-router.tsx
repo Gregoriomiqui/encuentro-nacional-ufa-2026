@@ -1,7 +1,8 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 
 import { SiteLayout } from '@features/site/presentation/components/site-layout'
 import { NotFoundPage } from '@pages/not-found-page'
+import { MaintenancePage } from '@pages/maintenance-page'
 import { PrivacyPage } from '@pages/privacy-page'
 import { OrganizerLoginPage } from '@pages/organizer-login-page'
 import { RegistrationPage } from '@pages/registration-page'
@@ -10,10 +11,21 @@ import { SiteHomePage } from '@pages/site-home-page'
 import { TermsPage } from '@pages/terms-page'
 import { StaffRegistrationPage } from '@pages/staff-registration-page'
 import { OrganizerRouteGuard } from '@app/router/organizer-route-guard'
+import { env } from '@shared/config/env'
 
 export function AppRouter() {
+  if (env.isMaintenance) {
+    return (
+      <Routes>
+        <Route path="/mantenimiento" element={<MaintenancePage />} />
+        <Route path="*" element={<Navigate to="/mantenimiento" replace />} />
+      </Routes>
+    )
+  }
+
   return (
     <Routes>
+      <Route path="/mantenimiento" element={<Navigate to="/" replace />} />
       <Route
         path="/"
         element={
