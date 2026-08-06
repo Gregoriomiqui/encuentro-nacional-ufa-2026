@@ -14,18 +14,9 @@ import { OrganizerRouteGuard } from '@app/router/organizer-route-guard'
 import { env } from '@shared/config/env'
 
 export function AppRouter() {
-  if (env.isMaintenance) {
-    return (
-      <Routes>
-        <Route path="/mantenimiento" element={<MaintenancePage />} />
-        <Route path="*" element={<Navigate to="/mantenimiento" replace />} />
-      </Routes>
-    )
-  }
-
   return (
     <Routes>
-      <Route path="/mantenimiento" element={<Navigate to="/" replace />} />
+      <Route path="/mantenimiento" element={env.isMaintenance ? <MaintenancePage /> : <Navigate to="/" replace />} />
       <Route
         path="/"
         element={
@@ -37,9 +28,13 @@ export function AppRouter() {
       <Route
         path="/inscripcion"
         element={
-          <SiteLayout title="UFA ACYM Chile">
-            <RegistrationPage />
-          </SiteLayout>
+          env.isMaintenance ? (
+            <Navigate to="/mantenimiento" replace />
+          ) : (
+            <SiteLayout title="UFA ACYM Chile">
+              <RegistrationPage />
+            </SiteLayout>
+          )
         }
       />
       <Route
