@@ -43,6 +43,7 @@ export const DISTRICT_CHURCHES: DistrictChurchDirectory[] = [
       'Las Condes',
       'La Reina',
       'Peñalolén',
+      'Ñuñoa',
       'La Florida',
       'Macul',
       'San Joaquín',
