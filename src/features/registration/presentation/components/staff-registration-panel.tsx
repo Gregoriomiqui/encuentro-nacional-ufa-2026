@@ -273,7 +273,7 @@ export function StaffRegistrationPanel({
               onChange={(e) => formik.setFieldValue('needsAccommodation', e.currentTarget.checked, true)}
               onBlur={formik.handleBlur}
             />
-            <span>Necesito alojamiento.</span>
+            <span>Necesito alojamiento</span>
           </label>
         </fieldset>
 

@@ -332,7 +332,7 @@ function ParticipantFormFields({
       </label>
 
       <label className="registration-field" htmlFor={`registrants.${participantIndex}.phone`}>
-        <span className="registration-label">Telefono</span>
+        <span className="registration-label">Teléfono</span>
         <input
           id={`registrants.${participantIndex}.phone`}
           name={`registrants.${participantIndex}.phone`}
@@ -415,7 +415,7 @@ function ParticipantFormFields({
             }}
             onBlur={formik.handleBlur}
           />
-          <span>La participante necesita alojamiento.</span>
+          <span>La participante necesita alojamiento</span>
         </label>
       </fieldset>
 
