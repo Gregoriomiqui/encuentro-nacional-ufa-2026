@@ -206,6 +206,7 @@ export const DISTRICT_CHURCHES: DistrictChurchDirectory[] = [
       'Río Bueno',
       'Congregación Crucero',
       'Lago Ranco',
+      'Casma',
       'Congregación Ilihue',
       'Congregación Riñinahue',
       'Congregación Ignao',
