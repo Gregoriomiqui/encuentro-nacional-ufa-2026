@@ -4,7 +4,6 @@ import type {
   FailedRegistrationValidationResponse,
 } from '@features/failed-registration-validation/domain/entities/failed-registration-validation'
 import type { FailedRegistrationValidationPort } from '@features/failed-registration-validation/application/ports/failed-registration-validation.port'
-import { validateFailedRegistrationInMake } from '@features/failed-registration-validation/infrastructure/repositories/make-failed-registration-validation.repository'
 
 export type ValidateFailedRegistrationResult = {
   payload: FailedRegistrationValidationPayload
@@ -17,9 +16,7 @@ function normalizeRegistrationId(value: string): string {
 
 export async function validateFailedRegistration(
   values: FailedRegistrationValidationFormValues,
-  repository: FailedRegistrationValidationPort = {
-    validateFailedRegistration: validateFailedRegistrationInMake,
-  },
+  repository: FailedRegistrationValidationPort,
 ): Promise<ValidateFailedRegistrationResult> {
   const registrationId = normalizeRegistrationId(values.registrationId)
 
