@@ -29,4 +29,37 @@ export default defineConfig([
       'react-refresh/only-export-components': 'off',
     },
   },
+  {
+    files: ['src/features/*/domain/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': ['error', {
+        patterns: [{
+          group: [
+            '@features/*/application/**',
+            '@features/*/infrastructure/**',
+            '@features/*/presentation/**',
+            '@app/**',
+            '@pages/**',
+          ],
+          message: 'El dominio solo puede depender del propio dominio o de shared.',
+        }],
+      }],
+    },
+  },
+  {
+    files: ['src/features/*/application/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': ['error', {
+        patterns: [{
+          group: [
+            '@features/*/infrastructure/**',
+            '@features/*/presentation/**',
+            '@app/**',
+            '@pages/**',
+          ],
+          message: 'La aplicación debe depender de puertos y dominio, no de capas externas.',
+        }],
+      }],
+    },
+  },
 ])

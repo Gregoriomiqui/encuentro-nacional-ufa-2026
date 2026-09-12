@@ -81,13 +81,20 @@ Para sugerir una mejora:
 
 ## 🔄 Pull Requests
 
+Todo cambio funcional comienza con una especificación versionada y debe seguir obligatoriamente el flujo SDD + DDD + TDD descrito en [docs/engineering/DEVELOPMENT_METHOD.md](docs/engineering/DEVELOPMENT_METHOD.md). Usa [specs/_template.md](specs/_template.md), sigue [specs/LIFECYCLE.md](specs/LIFECYCLE.md), obtén estado `accepted`, implementa cada escenario mediante el ciclo red-green-refactor y mantén su trazabilidad a pruebas.
+
 ### Checklist antes de enviar un PR:
 
 - [ ] El código sigue los estándares del proyecto
 - [ ] He probado los cambios localmente
 - [ ] He actualizado la documentación si es necesario
 - [ ] Los cambios no rompen funcionalidad existente
+- [ ] Los cambios se limitan al comportamiento solicitado y a los escenarios aceptados; no hay código ni funcionalidades inventadas
 - [ ] He revisado mi código en busca de errores
+- [ ] La especificación está aceptada y sus escenarios están trazados a pruebas
+- [ ] Completé el ciclo TDD red-green-refactor para cada cambio de comportamiento
+- [ ] `pnpm specs:validate`
+- [ ] Las dependencias respetan los límites entre dominio, aplicación, infraestructura y presentación
 - [ ] El código es limpio y bien comentado
 
 ### Proceso de Revisión:
