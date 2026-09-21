@@ -35,6 +35,7 @@ export const DISTRICT_CHURCHES: DistrictChurchDirectory[] = [
       'Pudahuel',
       'Lo Prado',
       'Quilicura',
+      'Chicurero',
       'Conchalí',
       'Rancagua',
       'Reñaca',
