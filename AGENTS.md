@@ -4,32 +4,35 @@ Guidance for AI coding agents working in this repository.
 
 ## Project Snapshot
 
-- Static website for Encuentro Nacional UFA 2026.
-- Stack: plain HTML, CSS, and vanilla JavaScript.
-- No package manager, no build pipeline, and no automated test suite.
-- Main files: `index.html`, `styles.css`, `script.js`, legal pages, and SEO files.
+- React 19 SPA for Encuentro Nacional UFA 2026, built with Vite and strict TypeScript.
+- Architecture: feature-first with domain, application, infrastructure, and presentation layers.
+- Package manager: pnpm. Tests use Vitest and React Testing Library.
+- The root static HTML/CSS/JS files are legacy; active application code lives in `src/`.
+- All behavior changes must follow the mandatory SDD + DDD + TDD method in `docs/engineering/DEVELOPMENT_METHOD.md`.
 
 ## Fast Start
 
-- Run locally from repository root:
-  - `python3 -m http.server 8000`
-- Open site:
-  - `http://localhost:8000`
-
-Alternative local serving options are documented in [README.md](README.md) and [QUICKSTART.md](QUICKSTART.md).
+- Install: `pnpm install`
+- Run locally: `pnpm dev`
+- Quality checks: `pnpm typecheck`, `pnpm lint`, `pnpm test:coverage`, `pnpm build`
 
 ## Work Boundaries
 
 - Keep changes small and focused.
-- Preserve existing static-site architecture (do not add frameworks, bundlers, or dependencies unless explicitly requested).
-- Prefer editing existing files over creating new structure.
+- Start functional changes from a versioned specification in `specs/`.
+- Use Spec Kit for new functional changes as described in `docs/engineering/SPEC_KIT.md`; its generated artifacts must comply with this repository's constitution and lifecycle.
+- Keep a specification in `accepted` state before implementing behavior. Implement each acceptance scenario with TDD and update its traceability before marking it `delivered`; run `pnpm specs:validate`.
+- Do not invent or add code, behavior, domain rules, optimizations, or features that were not explicitly requested or covered by an accepted specification. Only make technical changes strictly required to deliver the requested behavior.
+- Preserve the dependency direction enforced by ESLint: presentation -> application -> domain.
+- Application cases use ports; infrastructure implements adapters; presentation or `app` composes them.
+- Prefer existing React, TypeScript, Vite, and feature conventions over new dependencies.
 - Keep content language in Spanish unless the task explicitly asks otherwise.
 
 ## Editing Conventions
 
-### HTML
+### React and HTML
 
-- Use semantic HTML and preserve accessibility attributes (`lang`, `aria-*`, `alt`, heading hierarchy).
+- Use semantic JSX and preserve accessibility attributes (`lang`, `aria-*`, `alt`, heading hierarchy).
 - Keep navigation and legal links working across all pages.
 - If event content is updated, keep dates/venue consistent across sections.
 
@@ -39,22 +42,23 @@ Alternative local serving options are documented in [README.md](README.md) and [
 - Avoid hardcoded values when a matching variable already exists.
 - Maintain responsive behavior (mobile + desktop).
 
-### JavaScript
+### TypeScript
 
-- Keep vanilla JS style used in `script.js`.
-- Preserve `DOMContentLoaded` initialization pattern.
+- Keep strict types and use path aliases defined by the project.
+- Put business invariants in domain and orchestration in application use cases.
 - Add defensive checks for DOM lookups before acting.
 - Avoid introducing global state when not necessary.
 
-## Validation Checklist (Manual)
+## Validation Checklist
 
-After UI or behavior changes, verify:
+After changes, run the automated gate and verify UI behavior when applicable:
 
-1. Local site loads with no console errors.
-2. Main navigation and anchor scrolling still work.
-3. Links to `terminos-y-condiciones.html` and `politica-de-privacidad.html` work.
-4. Layout remains usable on mobile and desktop widths.
-5. External links keep `rel="noopener noreferrer"` behavior.
+1. `pnpm typecheck`
+2. `pnpm lint`
+3. `pnpm test:coverage`
+4. `pnpm build`
+5. Local site loads with no console errors.
+6. Layout remains usable on mobile and desktop widths.
 
 ## Deployment Notes
 

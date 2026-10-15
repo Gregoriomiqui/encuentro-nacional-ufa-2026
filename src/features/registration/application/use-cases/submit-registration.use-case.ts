@@ -5,11 +5,14 @@ import type {
   RegistrationPayload,
 } from '@features/registration/domain/entities/registration'
 import { RegistrationDietType } from '@features/registration/domain/entities/registration'
-import { sendRegistration, type MakeRegistrationResponse } from '@features/registration/infrastructure/repositories/make-registration.repository'
+import type {
+  RegistrationPort,
+  RegistrationResponse,
+} from '@features/registration/application/ports/registration.port'
 
 export type SubmitRegistrationResult = {
   payload: RegistrationPayload
-  apiResponse: MakeRegistrationResponse
+  apiResponse: RegistrationResponse
 }
 
 function toRegistrantDietType(dietType: RegistrationFormRegistrant['dietType']): RegistrationRegistrant['diet_type'] {
@@ -24,6 +27,7 @@ export async function submitRegistration(
   values: RegistrationFormValues,
   totalParticipants: number,
   workshopsBySchedule: { am: { id: string; workshop: string }[]; pm: { id: string; workshop: string }[] },
+  repository: RegistrationPort,
 ): Promise<SubmitRegistrationResult> {
   const amMap = new Map(workshopsBySchedule.am.map((w) => [w.id, w.workshop]))
   const pmMap = new Map(workshopsBySchedule.pm.map((w) => [w.id, w.workshop]))
@@ -63,7 +67,7 @@ export async function submitRegistration(
     }),
   }
 
-  const apiResponse = await sendRegistration(payload)
+  const apiResponse = await repository.submit(payload)
 
   return { payload, apiResponse }
 }

@@ -4,6 +4,7 @@ import toast from 'react-hot-toast'
 
 import type { FailedRegistrationValidationFormValues } from '@features/failed-registration-validation/domain/entities/failed-registration-validation'
 import { validateFailedRegistration } from '@features/failed-registration-validation/application/use-cases/validate-failed-registration.use-case'
+import { validateFailedRegistrationInMake } from '@features/failed-registration-validation/infrastructure/repositories/make-failed-registration-validation.repository'
 
 import '../styles/failed-registration-validation-form.css'
 
@@ -37,7 +38,9 @@ export function FailedRegistrationValidationForm() {
       setIsLoading(true)
 
       try {
-        const result = await validateFailedRegistration(values)
+        const result = await validateFailedRegistration(values, {
+          validateFailedRegistration: validateFailedRegistrationInMake,
+        })
         toast.success(result.apiResponse.message)
         helpers.resetForm()
       } catch (error) {

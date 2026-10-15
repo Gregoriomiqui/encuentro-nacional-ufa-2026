@@ -23,7 +23,10 @@ import {
   type ParticipantErrors,
 } from '@features/registration/domain/utils/participant-validation'
 import { submitRegistration } from '@features/registration/application/use-cases/submit-registration.use-case'
-import { fetchWorkshopOptions } from '@features/registration/infrastructure/repositories/make-registration.repository'
+import {
+  fetchWorkshopOptions,
+  sendRegistration,
+} from '@features/registration/infrastructure/repositories/make-registration.repository'
 
 const MAX_TOTAL_PARTICIPANTS = MAX_COMPANIONS + 1
 const MAX_RECEIPT_SIZE_BYTES = 5 * 1024 * 1024
@@ -392,7 +395,9 @@ export function useRegistration() {
       setIsLoading(true)
       try {
         const totalParticipants = getSafeCompanionCount(values.companionCount) + 1
-        const result = await submitRegistration(values, totalParticipants, workshopsBySchedule)
+        const result = await submitRegistration(values, totalParticipants, workshopsBySchedule, {
+          submit: sendRegistration,
+        })
         toast.success(result.apiResponse.message)
         setIsSuccessScreenVisible(true)
         setRedirectCountdownSeconds(10)

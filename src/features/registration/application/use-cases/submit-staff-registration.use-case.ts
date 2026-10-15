@@ -5,12 +5,14 @@ import {
   type StaffRegistrationPayload,
   type StaffType,
 } from '@features/registration/domain/entities/staff-registration'
-import { sendStaffRegistration } from '@features/registration/infrastructure/repositories/send-staff-registration.repository'
-import type { MakeRegistrationResponse } from '@features/registration/infrastructure/repositories/make-registration.repository'
+import type {
+  RegistrationResponse,
+  StaffRegistrationPort,
+} from '@features/registration/application/ports/registration.port'
 
 export type SubmitStaffRegistrationResult = {
   payload: StaffRegistrationPayload
-  apiResponse: MakeRegistrationResponse
+  apiResponse: RegistrationResponse
 }
 
 function toDietType(value: StaffRegistrationFormValues['dietType']): RegistrationDietType {
@@ -27,7 +29,10 @@ function toStaffType(value: StaffRegistrationFormValues['staffType']): StaffType
   throw new Error('Tipo de staff inválido.')
 }
 
-export async function submitStaffRegistration(values: StaffRegistrationFormValues): Promise<SubmitStaffRegistrationResult> {
+export async function submitStaffRegistration(
+  values: StaffRegistrationFormValues,
+  repository: StaffRegistrationPort,
+): Promise<SubmitStaffRegistrationResult> {
   const payload: StaffRegistrationPayload = {
     district_name: values.districtName,
     church_origin: values.churchOrigin,
@@ -47,7 +52,6 @@ export async function submitStaffRegistration(values: StaffRegistrationFormValue
     },
   }
 
-  const apiResponse = await sendStaffRegistration(payload)
-  console.log('[staff-registration] payload sent', JSON.stringify(payload, null, 2))
+  const apiResponse = await repository.submit(payload)
   return { payload, apiResponse }
 }

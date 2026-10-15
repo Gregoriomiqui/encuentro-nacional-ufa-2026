@@ -9,6 +9,7 @@ import { useRegistration } from './useRegistration'
 vi.mock('@features/registration/application/use-cases/submit-registration.use-case')
 vi.mock('@features/registration/infrastructure/repositories/make-registration.repository', () => ({
   fetchWorkshopOptions: vi.fn().mockResolvedValue({ am: [], pm: [] }),
+  sendRegistration: vi.fn(),
 }))
 vi.mock('react-hot-toast', () => ({
   __esModule: true,

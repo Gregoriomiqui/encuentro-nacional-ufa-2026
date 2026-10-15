@@ -17,6 +17,7 @@ import {
 } from '@features/registration/domain/utils/participant-validation'
 import { isChurchInDistrict } from '@features/registration/domain/entities/church-directory'
 import { submitStaffRegistration } from '@features/registration/application/use-cases/submit-staff-registration.use-case'
+import { sendStaffRegistration } from '@features/registration/infrastructure/repositories/send-staff-registration.repository'
 import { useState } from 'react'
 
 function validate(values: StaffRegistrationFormValues): FormikErrors<StaffRegistrationFormValues> {
@@ -89,7 +90,9 @@ export function useStaffRegistration() {
       isSubmittingRef.current = true
       setIsLoading(true)
       try {
-        const result = await submitStaffRegistration(values)
+        const result = await submitStaffRegistration(values, {
+          submit: sendStaffRegistration,
+        })
         toast.success(result.apiResponse.message)
         setIsSuccessScreenVisible(true)
         setRedirectCountdownSeconds(10)
