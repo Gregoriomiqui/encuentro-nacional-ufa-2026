@@ -262,20 +262,17 @@ export function StaffRegistrationPanel({
           {fieldError('dietType')}
         </fieldset>
 
-        <fieldset className="registration-field registration-choice-group">
-          <legend className="registration-label">Alojamiento</legend>
-          <label className="registration-checkbox-option" htmlFor="needsAccommodation">
-            <input
-              id="needsAccommodation"
-              name="needsAccommodation"
-              type="checkbox"
-              checked={formik.values.needsAccommodation}
-              onChange={(e) => formik.setFieldValue('needsAccommodation', e.currentTarget.checked, true)}
-              onBlur={formik.handleBlur}
-            />
-            <span>Necesito alojamiento</span>
-          </label>
-        </fieldset>
+        <label className="registration-field" htmlFor="needsAccommodationLocked">
+          <span className="registration-label">Alojamiento</span>
+          <input
+            id="needsAccommodationLocked"
+            type="text"
+            value="No"
+            readOnly
+            aria-readonly="true"
+            className="registration-input"
+          />
+        </label>
 
         <label className="registration-field registration-field-wide" htmlFor="staffCode">
           <span className="registration-label">Código de staff</span>

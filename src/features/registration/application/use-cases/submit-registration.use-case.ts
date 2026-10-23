@@ -54,7 +54,8 @@ export async function submitRegistration(
         last_name: registrant.lastName.trim(),
         age: Number(registrant.age),
         diet_type: toRegistrantDietType(registrant.dietType),
-        needs_accommodation: registrant.needsAccommodation,
+        // Accommodation is fixed to "No" for all regular registrations.
+        needs_accommodation: false,
         workshop_choices: workshopChoices,
         phone: registrant.phone.trim(),
         email: registrant.email.trim().toLowerCase(),
