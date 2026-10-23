@@ -1,8 +1,10 @@
 import { env } from '@shared/config/env'
+import { supabase } from '@shared/lib/supabase/supabase'
 import type { RegistrationPayload, WorkshopOption, WorkshopsBySchedule } from '@features/registration/domain/entities/registration'
 
 const MAKE_REGISTRATION_PATH = '/ycww8er2htyap4dikfsqdk6xwy9o5ut6'
-const MAKE_WORKSHOPS_PATH = '/sfnusa1islhf4niyydrpqprn1wwhyv5i'
+const DEFAULT_SUPABASE_WORKSHOPS_AM_TABLE = 'workshops_am'
+const DEFAULT_SUPABASE_WORKSHOPS_PM_TABLE = 'workshops_pm'
 
 export type MakeRegistrationResponse = {
   success: boolean
@@ -18,6 +20,38 @@ export class RegistrationApiError extends Error {
   }
 }
 
+function normalizeBoolean(value: unknown): boolean {
+  if (typeof value === 'boolean') {
+    return value
+  }
+
+  if (typeof value === 'number') {
+    return value === 1
+  }
+
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase()
+    return normalized === 'true' || normalized === '1' || normalized === 'yes' || normalized === 'on'
+  }
+
+  return false
+}
+
+function normalizeCount(value: unknown): number {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value
+  }
+
+  if (typeof value === 'string') {
+    const parsed = Number(value)
+    if (Number.isFinite(parsed)) {
+      return parsed
+    }
+  }
+
+  return 0
+}
+
 function normalizeWorkshopOption(raw: unknown): WorkshopOption | null {
   if (!raw || typeof raw !== 'object') {
     return null
@@ -25,17 +59,15 @@ function normalizeWorkshopOption(raw: unknown): WorkshopOption | null {
 
   const candidate = raw as Record<string, unknown>
   const id = candidate.id
-  const idWorkshop = candidate.idWorshop ?? candidate.idWorkshop
+  const idWorkshop = candidate.idWorshop ?? candidate.idWorkshop ?? candidate.id_workshop
   const workshop = candidate.workshop
-  const countRegistered = candidate.countRegistered
-  const isEnabled = candidate.isEnabled
+  const countRegistered = candidate.countRegistered ?? candidate.count_registered
+  const isEnabled = candidate.isEnabled ?? candidate.is_enabled
 
   if (
     typeof id !== 'string' ||
     typeof idWorkshop !== 'string' ||
-    typeof workshop !== 'string' ||
-    typeof countRegistered !== 'number' ||
-    typeof isEnabled !== 'boolean'
+    typeof workshop !== 'string'
   ) {
     return null
   }
@@ -44,39 +76,27 @@ function normalizeWorkshopOption(raw: unknown): WorkshopOption | null {
     id,
     idWorkshop,
     workshop,
-    countRegistered,
-    isEnabled,
+    countRegistered: normalizeCount(countRegistered),
+    isEnabled: normalizeBoolean(isEnabled),
   }
 }
 
 export async function fetchWorkshopOptions(): Promise<WorkshopsBySchedule> {
-  if (!env.makeWebhookUrl || !env.makeWebhookApiKey) {
-    throw new Error('Faltan variables de entorno para obtener talleres (VITE_MAKE_WEBHOOK_URL y VITE_MAKE_API_KEY).')
+  const amTable = env.supabaseWorkshopsAmTable || DEFAULT_SUPABASE_WORKSHOPS_AM_TABLE
+  const pmTable = env.supabaseWorkshopsPmTable || DEFAULT_SUPABASE_WORKSHOPS_PM_TABLE
+  const [amResult, pmResult] = await Promise.all([
+    supabase.from(amTable).select('*').eq('isEnabled', true),
+    supabase.from(pmTable).select('*').eq('isEnabled', true),
+  ])
+
+  if (amResult.error || pmResult.error) {
+    const error = amResult.error || pmResult.error
+    throw new RegistrationApiError(error?.code ? Number(error.code) || 400 : 400, 'No se pudo obtener la lista de talleres.')
   }
-
-  const response = await fetch(`${env.makeWebhookUrl}${MAKE_WORKSHOPS_PATH}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-make-apikey': env.makeWebhookApiKey,
-    },
-  })
-
-  if (!response.ok) {
-    throw new RegistrationApiError(response.status, 'No se pudo obtener la lista de talleres.')
-  }
-
-  const data: unknown = await response.json()
-
-  if (!data || typeof data !== 'object' || !('am' in data) || !('pm' in data)) {
-    throw new TypeError('Formato de talleres invalido. Se esperaba un objeto con am y pm.')
-  }
-
-  const raw = data as { am: unknown[]; pm: unknown[] }
 
   return {
-    am: (Array.isArray(raw.am) ? raw.am : []).map(normalizeWorkshopOption).filter((o): o is WorkshopOption => o !== null),
-    pm: (Array.isArray(raw.pm) ? raw.pm : []).map(normalizeWorkshopOption).filter((o): o is WorkshopOption => o !== null),
+    am: amResult.data.map(normalizeWorkshopOption).filter((option): option is WorkshopOption => option !== null),
+    pm: pmResult.data.map(normalizeWorkshopOption).filter((option): option is WorkshopOption => option !== null),
   }
 }
 

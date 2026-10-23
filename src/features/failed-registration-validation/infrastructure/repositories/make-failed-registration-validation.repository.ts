@@ -55,7 +55,7 @@ export async function validateFailedRegistrationInMake(
 
   if (!response.ok) {
     if (response.status === 400) {
-      throw new FailedRegistrationValidationApiError(400, 'El id de registro no es valido.')
+      throw new FailedRegistrationValidationApiError(400, 'El id de registro no es válido.')
     }
 
     if (response.status === 404) {
@@ -72,7 +72,7 @@ export async function validateFailedRegistrationInMake(
   const data: unknown = await response.json()
 
   if (!isFailedValidationResponse(data)) {
-    throw new TypeError('Formato de respuesta invalido al validar el registro.')
+    throw new TypeError('Formato de respuesta inválido al validar el registro.')
   }
 
   if (!data.success) {

@@ -15,6 +15,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.112.3",
     "browser-image-compression": "^2.0.2",
     "firebase": "^12.15.0",
     "formik": "^2.4.9",
