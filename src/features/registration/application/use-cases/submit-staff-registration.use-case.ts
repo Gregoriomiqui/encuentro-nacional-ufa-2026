@@ -41,7 +41,8 @@ export async function submitStaffRegistration(values: StaffRegistrationFormValue
       last_name: values.lastName.trim(),
       age: Number(values.age),
       diet_type: toDietType(values.dietType),
-      needs_accommodation: values.needsAccommodation,
+      // Accommodation is fixed to "No" for all staff registrations.
+      needs_accommodation: false,
       phone: values.phone.trim(),
       email: values.email.trim().toLowerCase(),
     },

@@ -398,26 +398,17 @@ function ParticipantFormFields({
         {showErrors && participantErrors?.dietType ? <span className="registration-error">{participantErrors.dietType}</span> : null}
       </fieldset>
 
-      <fieldset className="registration-field registration-choice-group">
-        <legend className="registration-label">Alojamiento</legend>
-        <label className="registration-checkbox-option" htmlFor={`registrants.${participantIndex}.needsAccommodation`}>
-          <input
-            id={`registrants.${participantIndex}.needsAccommodation`}
-            name={`registrants.${participantIndex}.needsAccommodation`}
-            type="checkbox"
-            checked={formik.values.registrants[participantIndex]?.needsAccommodation ?? false}
-            onChange={(event) => {
-              formik.setFieldValue(
-                `registrants.${participantIndex}.needsAccommodation`,
-                event.currentTarget.checked,
-                true,
-              )
-            }}
-            onBlur={formik.handleBlur}
-          />
-          <span>La participante necesita alojamiento.</span>
-        </label>
-      </fieldset>
+      <label className="registration-field" htmlFor={`registrants.${participantIndex}.needsAccommodationLocked`}>
+        <span className="registration-label">Alojamiento</span>
+        <input
+          id={`registrants.${participantIndex}.needsAccommodationLocked`}
+          type="text"
+          value="No"
+          readOnly
+          aria-readonly="true"
+          className="registration-input"
+        />
+      </label>
 
       {withWorkshops && (
         <>
