@@ -50,7 +50,11 @@ describe('submitRegistration', () => {
     await submitRegistration(values, 2, { am: [], pm: [] })
 
     expect(sendRegistration).toHaveBeenCalledTimes(1)
-    const payload = vi.mocked(sendRegistration).mock.calls[0][0]
+    const [firstCall] = vi.mocked(sendRegistration).mock.calls
+    if (!firstCall) {
+      throw new Error('sendRegistration was not called')
+    }
+    const [payload] = firstCall
     expect(payload.registrants).toHaveLength(2)
     expect(payload.registrants[0]?.needs_accommodation).toBe(false)
     expect(payload.registrants[1]?.needs_accommodation).toBe(false)

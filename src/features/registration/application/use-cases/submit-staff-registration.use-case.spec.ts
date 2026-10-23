@@ -31,7 +31,11 @@ describe('submitStaffRegistration', () => {
     await submitStaffRegistration(values)
 
     expect(sendStaffRegistration).toHaveBeenCalledTimes(1)
-    const payload = vi.mocked(sendStaffRegistration).mock.calls[0][0]
+    const [firstCall] = vi.mocked(sendStaffRegistration).mock.calls
+    if (!firstCall) {
+      throw new Error('sendStaffRegistration was not called')
+    }
+    const [payload] = firstCall
     expect(payload.registrant.needs_accommodation).toBe(false)
   })
 })
